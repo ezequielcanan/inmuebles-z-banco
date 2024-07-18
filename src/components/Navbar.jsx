@@ -45,8 +45,8 @@ const Navbar = ({ user, setUser }) => {
         </Link>
         <div className="md:flex md:gap-x-[20px] xl:flex-col xl:gap-y-[30px] xl:w-full">
           <div className="hidden xl:w-full md:flex flex-col gap-y-[20px] justify-center xl:justify-start relative">
-            <div className={`${"block w-full h-full bg-secondary text-black hover:bg-secondary/80"} xl:block w-full text-xl`}>
-              <NavLink to={"/accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "bg-black text-secondary"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
+            <div className={`${"block w-full h-full bg-secondary text-white hover:bg-secondary/80"} xl:block w-full text-xl`}>
+              <NavLink to={"/accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-black text-secondary"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
             </div>
           </div>
         </div>

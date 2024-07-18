@@ -8,6 +8,7 @@ import Register from "../pages/Register";
 import Accounts from "../pages/Accounts";
 import Account from "../pages/Account";
 import NewMovement from "../pages/NewMovement";
+import NewAccount from "../pages/NewAccount"
 
 const Router = () => {
   const { getUser, setUser } = useContext(UserContext);
@@ -26,6 +27,7 @@ const Router = () => {
         ) : (
           <>
           <Route path="/accounts" element={<Accounts/>}/>
+          <Route path="/accounts/new" element={<NewAccount/>}/>
           <Route path="/accounts/:aid" element={<Account/>}/>
           <Route path="/accounts/:aid/new-movement" element={<NewMovement/>}/>
           </>

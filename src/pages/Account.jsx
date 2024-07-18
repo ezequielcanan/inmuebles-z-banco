@@ -100,19 +100,19 @@ const Account = () => {
                 <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(!filter)}>Ordenado por: {filter ? "Vencimiento" : "Emisión"}</Button>
                 <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-5xl"><FaFileDownload/></a>
               </div>
-              <table className="w-full border-4 border-b-0 border-secondary">
-                <thead className="w-full border-b-4 border-secondary">
+              <table className="w-full border-4 border-b-0 border-third">
+                <thead className="w-full border-b-4 border-third">
                   <tr>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Emisión</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Vencimiento</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">N° cheque</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Detalle</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Credito</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Debito</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Brutos</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">6XMIL</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Saldo</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-secondary text-2xl text-white">Borrar</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">N° cheque</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Credito</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Debito</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Brutos</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">6XMIL</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Borrar</th>
                   </tr>
                 </thead>
                 <tbody>

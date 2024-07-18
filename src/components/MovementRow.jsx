@@ -10,7 +10,7 @@ const MovementRow = ({movement, setReload}) => {
   }
 
   return (
-    <tr className="border-b-4 border-secondary duration-300">
+    <tr className="border-b-4 border-third duration-300">
       <td className="p-3">{movement?.emissionDate}</td>
       <td className="p-3">{movement?.expirationDate}</td>
       <td className="p-3">{movement?.checkCode}</td>
