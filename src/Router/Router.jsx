@@ -1,0 +1,38 @@
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { useContext } from "react";
+import Home from "../pages/Home";
+import Navbar from "../components/Navbar";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Accounts from "../pages/Accounts";
+import Account from "../pages/Account";
+import NewMovement from "../pages/NewMovement";
+
+const Router = () => {
+  const { getUser, setUser } = useContext(UserContext);
+
+  return (
+    <HashRouter>
+      <Navbar user={getUser()} setUser={setUser} />
+      <Routes>
+        <Route path="/" element={<Home user={getUser()} />} />
+        {!getUser() ? (
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<Navigate to={"/login"} />} />
+          </>
+        ) : (
+          <>
+          <Route path="/accounts" element={<Accounts/>}/>
+          <Route path="/accounts/:aid" element={<Account/>}/>
+          <Route path="/accounts/:aid/new-movement" element={<NewMovement/>}/>
+          </>
+        )}
+      </Routes>
+    </HashRouter>
+  );
+};
+
+export default Router;
