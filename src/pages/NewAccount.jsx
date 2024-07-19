@@ -45,6 +45,9 @@ const NewAccount = () => {
           <SelectInput register={{...register("society")}} options={projects}>
             <Label name={"society"} text={"Sociedad:"}/>
           </SelectInput>
+          <Input register={{...register("accountNumber")}}>
+            <Label name={"accountNumber"} text={"N° de cuenta:"}/>
+          </Input>
           <Input register={{...register("cbu")}}>
             <Label name={"cbu"} text={"CBU:"}/>
           </Input>

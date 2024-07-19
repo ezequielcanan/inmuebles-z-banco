@@ -66,6 +66,9 @@ const Account = () => {
               <SelectInput register={{ ...register("society") }} defaultValue={account?.society?._id} options={projects} disabled={!editing} optionClassName={"text-white"} containerClassName={"!border-b-0 !w-full !justify-start"} className={"!text-2xl"}>
                 <Label text={"Sociedad:"} name={"society"} className={"!text-2xl"} />
               </SelectInput>
+              <Input register={{ ...register("accountNumber") }} defaultValue={account?.accountNumber} disabled={!editing} containerClassName={"!border-b-0 !w-full !justify-start"} className={"!text-2xl"}>
+                <Label text={"N° de cuenta:"} name={"accountNumber"} className={"!text-2xl"} />
+              </Input>
               <Input register={{ ...register("cuit") }} defaultValue={account?.cuit} disabled={!editing} containerClassName={"!border-b-0 !w-full !justify-start"} className={"!text-2xl"}>
                 <Label text={"CUIT:"} name={"cuit"} className={"!text-2xl"} />
               </Input>
