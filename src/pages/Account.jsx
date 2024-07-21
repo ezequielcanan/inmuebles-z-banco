@@ -108,7 +108,8 @@ const Account = () => {
                   <tr>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">N° cheque</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Tipo</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Número</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Credito</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Debito</th>
