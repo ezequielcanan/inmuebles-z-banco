@@ -31,6 +31,8 @@ const NewMovement = () => {
     data.expirationDate = data.expirationDate || data.emissionDate
     if (!data.cashAccount) {
       delete data.cashAccount
+    } else if (!data.detail) {
+      data.detail = cashAccounts.find(a => a.value == data.cashAccount)?.text
     }
     await customAxios.post("/movement", data)
     navigate(`/accounts/${aid}`)

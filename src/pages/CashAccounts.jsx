@@ -48,9 +48,11 @@ const CashAccounts = () => {
                 return <div key={"c"+i} className="bg-teal-500 shadow-[10px_10px_15px_0px_#2226] border-primary flex flex-col justify-between w-full gap-y-4 py-6 px-6 text-black duration-300">
                 <h3 className="text-3xl">{account?.name}</h3>
                 <div className="flex items-center text-2xl gap-x-4">
-                  <Button style="icon" className={"!bg-third text-white rounded-md duration-300 hover:scale-90"}>
-                    <FaFileExcel/>
-                  </Button>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/cash-account/excel/${account?._id}` }>
+                    <Button style="icon" className={"!bg-third text-white rounded-md duration-300 hover:scale-90"}>
+                      <FaFileExcel/>
+                    </Button>
+                  </a>
                   <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90"} onClick={() => onDeleteAccount(account?._id)}>
                     <FaTrash/>
                   </Button>
