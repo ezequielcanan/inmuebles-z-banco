@@ -14,6 +14,7 @@ import Label from "../components/Label"
 import { useForm } from "react-hook-form"
 import SelectInput from "../components/FormInput/SelectInput"
 import Form from "../components/Form"
+import SignatoryCard from "../components/SignatoryCard"
 
 const Account = () => {
   const { aid } = useParams()
@@ -23,6 +24,7 @@ const Account = () => {
   const [projects, setProjects] = useState(false)
   const [editing, setEditing] = useState(false)
   const [reload, setReload] = useState(false)
+  const [signatories, setSignatories] = useState([])
 
   const { register, handleSubmit } = useForm()
 
@@ -39,6 +41,7 @@ const Account = () => {
   useEffect(() => {
     customAxios.get(`/account/${aid}`).then(res => {
       setAccount(res?.data?.payload)
+      setSignatories(res?.data?.payload?.signatories || [])
     })
   }, [reload])
 
@@ -47,11 +50,22 @@ const Account = () => {
   }, [filter, reload])
 
   const onSubmit = handleSubmit(async data => {
-    await customAxios.put(`/account/${aid}`, data)
+    await customAxios.put(`/account/${aid}`, {...data, signatories})
     setEditing(false)
     setReload(!reload)
   })
 
+  const deleteFirmante = (firmanteIndex) => {
+    signatories.splice(firmanteIndex,1)
+    setSignatories([...signatories])
+  }
+
+  const changeFirmanteProperty = (property, value, firmanteIndex) => {
+    const updateObj = {}
+    updateObj[property] = value
+    signatories[firmanteIndex] = {...signatories[firmanteIndex], ...updateObj}
+    setSignatories([...signatories])
+  }
 
   return (
     <Main className={"flex flex-col gap-y-[20px] pb-[120px]"} paddings>
@@ -61,7 +75,7 @@ const Account = () => {
             <Title>Banco {account.bank} {account.society?.title}</Title>
             <FaEdit className="text-5xl cursor-pointer" onClick={() => setEditing(!editing)} />
           </Section>
-          <section className="flex flex-col items-start gap-y-[10px] text-xl">
+          <section className="grid lg:grid-cols-2 gap-x-4 gap-y-[10px] text-xl">
             <Form onSubmit={onSubmit}>
               <SelectInput register={{ ...register("society") }} defaultValue={account?.society?._id} options={projects} disabled={!editing} optionClassName={"text-white"} containerClassName={"!border-b-0 !w-full !justify-start"} className={"!text-2xl"}>
                 <Label text={"Sociedad:"} name={"society"} className={"!text-2xl"} />
@@ -88,6 +102,14 @@ const Account = () => {
                 Actualizar cuenta
               </Button>}
             </Form>
+            <div className={`grid grid-cols-2 gap-4 text-white grid-rows-3 w-full`}>
+              {signatories?.map((sign, i) => {
+                return <SignatoryCard accountPanel firmante={sign} i={i} editing={editing} labelClassName={"!text-lg"} className={"!text-lg"} changeFirmanteProperty={changeFirmanteProperty} deleteFirmante={deleteFirmante}/>
+              })}
+              {editing ? <div className="border-dashed border-4 border-yellow-100 w-full flex items-center justify-center h-full" onClick={() => setSignatories([...signatories, {}])}>
+                <FaPlus/>
+              </div> : null}
+            </div>
           </section>
           <section className="flex flex-col items-start gap-y-[30px] pt-[60px]">
             <div className="flex w-full gap-8 items-center flex-col sm:flex-row justify-between">

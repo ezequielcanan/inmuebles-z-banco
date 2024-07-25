@@ -9,6 +9,8 @@ import { useState, useEffect, useContext } from "react"
 import CookiesJs from "js-cookie"
 import Button from "./Button"
 import { UserContext } from "../context/UserContext"
+import { CiCircleMore } from "react-icons/ci"
+import { FiMoreHorizontal } from "react-icons/fi"
 
 const Navbar = ({ user, setUser }) => {
   const [dropdown, setDropdown] = useState("")
@@ -44,14 +46,17 @@ const Navbar = ({ user, setUser }) => {
           <img src="logo.svg" alt="" className="py-4 w-[200px] xl:w-auto" />
         </Link>
         <div className="md:flex md:gap-x-[20px] xl:flex-col xl:gap-y-[30px] xl:w-full">
-          <div className="hidden xl:w-full md:flex md:flex-row xl:flex-col gap-x-[10px] gap-y-[20px] justify-center xl:justify-start relative">
-            <div className={`${"block w-full h-full md:w-auto bg-secondary text-white hover:bg-secondary/80"} xl:block w-full text-xl`}>
-              <NavLink to={"/accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-black text-secondary"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
-            </div>
-            <div className={`${"block w-full h-full md:w-auto bg-secondary text-white hover:bg-secondary/80"} xl:block w-full text-xl`}>
-              <NavLink to={"/cash-accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-black text-secondary"}`} onClick={() => setNav(false)}><MdAttachMoney /> Ingresos</NavLink>
-            </div>
-          </div>
+          <ul className="hidden xl:w-full md:flex md:flex-row xl:flex-col gap-x-[10px] gap-y-[20px] justify-center xl:justify-start relative">
+            <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
+              <NavLink to={"/accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
+            </li>
+            <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
+              <NavLink to={"/cash-accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><MdAttachMoney /> Ingresos</NavLink>
+            </li>
+            <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
+              <NavLink to={"/services"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><FiMoreHorizontal /> Servicios</NavLink>
+            </li>
+          </ul>
         </div>
         {user ? <div className="xl:self-start">
           <Link to={"/"} className="hidden md:flex items-center">
@@ -61,10 +66,13 @@ const Navbar = ({ user, setUser }) => {
 
         {<div className={`${(nav && window.innerWidth < 768) ? "!left-0 bg-black" : ""} px-5 py-7 duration-300 fixed top-[100px] left-[-120%] flex flex-col gap-y-[20px] h-screen w-screen`}>
           <div className={`xl:block w-full text-xl`}>
-            <NavLink to={"/"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-black"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
+            <NavLink to={"/"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><MdAccountBalanceWallet /> Bancos</NavLink>
           </div>
           <div className={`xl:block w-full text-xl`}>
-            <NavLink to={"/cash-accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-black"}`} onClick={() => setNav(false)}><MdAttachMoney /> Ingresos</NavLink>
+            <NavLink to={"/cash-accounts"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><MdAttachMoney /> Ingresos</NavLink>
+          </div>
+          <div className={`xl:block w-full text-xl`}>
+            <NavLink to={"/services"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><FiMoreHorizontal /> Servicios</NavLink>
           </div>
           <ul className="flex flex-col gap-x-[30px] gap-y-[20px] rounded-md text-black py-6 text-2xl">
             {user ? <li className="pb-2">

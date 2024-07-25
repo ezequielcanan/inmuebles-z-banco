@@ -10,6 +10,7 @@ import Title from "../components/Title"
 import customAxios from "../config/axios.config"
 import { useEffect, useState } from "react"
 import SelectInput from "../components/FormInput/SelectInput"
+import Fields from "../components/Fields"
 
 const NewMovement = () => {
   const [cashAccounts, setCashAccounts] = useState([])
@@ -19,16 +20,16 @@ const NewMovement = () => {
   const {register, handleSubmit, setFocus} = useForm()
   const fields = [
     {name: "emissionDate", type: "date", text: "Emisión", required: true, component: Input},
-    {name: "expirationDate", type: "date", text: "Vencimiento", required: false, component: Input},
-    {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}], required: false, component: SelectInput, common: false},
-    {name: "code", text: "Número:", required: false, component: Input},
-    {name: "detail", text: "Detalle:", required: false, component: Input},
-    {name: "credit", text: "Crédito:", type: "number", required: false, component: Input},
-    {name: "debit", text: "Débito:", type: "number", required: false, component: Input},
-    {name: "paid", text: "Finalizado:", type: "checkbox", required: false, component: Input, className: "scale-[2] -translate-x-1 justify-self-end"},
-    {name: "tax", text: "Ingresos brutos:", type: "number", required: false, placeholder: "%", component: Input},
-    {name: "supplier", text: "Proveedor:", options: [{text: null, value: undefined}, ...suppliers], required: false, component: SelectInput, common: false},
-    {name: "cashAccount", text: "Cuenta de ingreso:", options: [{text: null, value: undefined}, ...cashAccounts], required: false, component: SelectInput, common: false}
+    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input},
+    {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}], component: SelectInput, common: false},
+    {name: "code", text: "Número:", component: Input},
+    {name: "detail", text: "Detalle:", component: Input},
+    {name: "credit", text: "Crédito:", type: "number", component: Input},
+    {name: "debit", text: "Débito:", type: "number", component: Input},
+    {name: "paid", text: "Finalizado:", type: "checkbox", component: Input, className: "scale-[2] -translate-x-1 justify-self-end"},
+    {name: "tax", text: "Ingresos brutos:", type: "number", placeholder: "%", component: Input},
+    {name: "supplier", text: "Proveedor:", options: [{text: null, value: undefined}, ...suppliers], component: SelectInput, common: false},
+    {name: "cashAccount", text: "Cuenta de ingreso:", options: [{text: null, value: undefined}, ...cashAccounts], component: SelectInput, common: false}
   ]
 
   const onSubmit = handleSubmit(async data => {
@@ -87,14 +88,7 @@ const NewMovement = () => {
       </section>
       <Section style="form"  className={"!bg-primary"}>
         <Form onSubmit={onSubmit} className={"bg-primary"}>
-          {fields.map((field, i) => {
-            const Component = field.component
-            const newProps = {}
-            !field.common && (newProps.options = field.options)
-            return <Component key={"f"+i} {...newProps} className={field.className || ""} register={{...register(field?.name, {required: field.required})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
-            <Label name={field?.name} text={field.text}/>
-          </Component>
-          })}
+          <Fields fields={fields} onSubmit={onSubmit} setFocus={setFocus} register={register}/>
           <Button type="submit" style="submit" className={"text-black"}>
             Agregar Movimiento
           </Button>

@@ -12,12 +12,26 @@ import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import SelectInput from "../components/FormInput/SelectInput"
 import { FaPlus, FaTrash } from "react-icons/fa6"
+import SignatoryCard from "../components/SignatoryCard"
+import { AnimatePresence } from "framer-motion"
+import Fields from "../components/Fields"
 
 const NewAccount = () => {
   const navigate = useNavigate()
-  const { register, handleSubmit } = useForm()
-  const [projects, setProjects] = useState(false)
+  const { register, handleSubmit, setFocus } = useForm()
+  const [projects, setProjects] = useState([])
   const [firmantes, setFirmantes] = useState([])
+
+  const fields = [
+    {name: "society", text: "Sociedad", options: projects, component: SelectInput, common: false},
+    {name: "accountNumber", text: "N° de cuenta:", component: Input},
+    {name: "cbu", text: "CBU:", component: Input},
+    {name: "alias", text: "Alias:", component: Input},
+    {name: "cuit", text: "CUIT:", component: Input},
+    {name: "bank", text: "Banco:", component: Input},
+    {name: "name", text: "Titular:", component: Input},
+    {name: "initialBalance", text: "Saldo inicial:", type: "number", component: Input},
+  ]
 
   useEffect(() => {
     customAxios.get("/projects?filter=false").then(res => {
@@ -30,7 +44,7 @@ const NewAccount = () => {
   }, [])
 
   const onSubmit = handleSubmit(async data => {
-    const result = (await customAxios.post("/account", data)).data
+    const result = (await customAxios.post("/account", {...data, signatories: firmantes})).data
     navigate("/accounts")
   }) 
 
@@ -47,57 +61,25 @@ const NewAccount = () => {
   }
 
   return (
-    <Main className={"grid items-center justify-center gap-y-[30px]"} paddings>
+    <Main className={"grid items-center justify-center gap-y-[30px] pb-4"} paddings>
       <section>
         <Title className={"text-start md:text-center"}>
           Nueva cuenta bancaria
         </Title>
       </section>
-      {projects ? <Section style="form" className={""}>
+      {projects.length ? <Section style="form" className={""}>
         <MdAccountBalanceWallet className="text-[100px] md:text-[180px]" />
         <Form onSubmit={onSubmit} className={""}>
-          <SelectInput register={{...register("society")}} options={projects}>
-            <Label name={"society"} text={"Sociedad:"}/>
-          </SelectInput>
-          <Input register={{...register("accountNumber")}}>
-            <Label name={"accountNumber"} text={"N° de cuenta:"}/>
-          </Input>
-          <Input register={{...register("cbu")}}>
-            <Label name={"cbu"} text={"CBU:"}/>
-          </Input>
-          <Input register={{...register("alias")}}>
-            <Label name={"alias"} text={"Alias:"}/>
-          </Input>
-          <Input register={{...register("cuit")}}>
-            <Label name={"cuit"} text={"CUIT:"}/>
-          </Input>
-          <Input register={{...register("bank")}}>
-            <Label name={"bank"} text={"Banco:"}/>
-          </Input>
-          <Input register={{...register("name")}}>
-            <Label name={"name"} text={"Titular:"}/>
-          </Input>
-          <Input register={{...register("initialBalance", {required: true})}} type="number">
-            <Label name={"initialBalance"} text={"Saldo inicial:"}/>
-          </Input>
+          <Fields fields={fields} setFocus={setFocus} register={register} onSubmit={onSubmit}/>
           <p className="text-xl md:text-4xl font-ubuntu">Firmantes:</p>
-          <div className="flex flex-col gap-4 items-start max-w-full">
-            {firmantes.map((firmante, i) => {
-              return <div className="flex flex-col gap-2 bg-fourth p-4 rounded items-center w-full justify-between" key={"f"+i}>
-                <div className="flex gap-4 justify-between w-full">
-                  <Input placeholder={"Nombre"} value={firmante?.name} className={"!w-full"} containerClassName={"w-full"} onInput={(e) => changeFirmanteProperty("name", e.currentTarget.value, i)}/>
-                  <Button style="icon" type="button" className={"!bg-red-600 text-lg"} onClick={() => deleteFirmante(i)}><FaTrash/></Button>
-                </div>
-                <Input containerClassName={"w-full"} type="date" onInput={(e) => changeFirmanteProperty("from", e.currentTarget.value, i)}>
-                  <Label text={"Desde"} value={firmante?.from}/>
-                </Input>
-                <Input containerClassName={"w-full"} type="date" onInput={(e) => changeFirmanteProperty("to", e.currentTarget.value, i)}>
-                  <Label text={"Hasta"} value={firmante?.to}/>
-                </Input>
-              </div>
-            })}
-            <Button className={"bg-teal-700 after:bg-teal-600"} type="button" onClick={() => setFirmantes([...firmantes, {}])}>Agregar Firmante <FaPlus/></Button>
-          </div>
+            <div className="flex flex-col gap-4 items-start max-w-full">
+            <AnimatePresence>
+              {firmantes.map((firmante, i) => {
+                return <SignatoryCard changeFirmanteProperty={changeFirmanteProperty} firmante={firmante} deleteFirmante={deleteFirmante} i={i}/>
+              })}
+              <Button className={"bg-teal-700 after:bg-teal-600"} type="button" onClick={() => setFirmantes([...firmantes, {}])}>Agregar Firmante <FaPlus/></Button>
+            </AnimatePresence>
+            </div>
           <Button type="submit" style="submit" className={"text-black"}>
             Agregar Cuenta
           </Button>

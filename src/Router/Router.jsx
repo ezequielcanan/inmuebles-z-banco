@@ -10,6 +10,7 @@ import Account from "../pages/Account";
 import NewMovement from "../pages/NewMovement";
 import NewAccount from "../pages/NewAccount"
 import CashAccounts from "../pages/CashAccounts";
+import Services from "../pages/Services";
 
 const Router = () => {
   const { getUser, setUser } = useContext(UserContext);
@@ -32,7 +33,7 @@ const Router = () => {
           <Route path="/accounts/:aid" element={<Account/>}/>
           <Route path="/accounts/:aid/new-movement" element={<NewMovement/>}/>
           <Route path="/cash-accounts" element={<CashAccounts/>}/>
-          
+          <Route path="/services" element={<Services/>}/>
           </>
         )}
       </Routes>
