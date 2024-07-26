@@ -56,6 +56,9 @@ const Navbar = ({ user, setUser }) => {
             <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
               <NavLink to={"/services"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><FiMoreHorizontal /> Servicios</NavLink>
             </li>
+            <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
+              <NavLink to={"/suppliers"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><FaHelmetSafety /> Proveedores</NavLink>
+            </li>
           </ul>
         </div>
         {user ? <div className="xl:self-start">
@@ -73,6 +76,9 @@ const Navbar = ({ user, setUser }) => {
           </div>
           <div className={`xl:block w-full text-xl`}>
             <NavLink to={"/services"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><FiMoreHorizontal /> Servicios</NavLink>
+          </div>
+          <div className={`xl:block w-full text-xl`}>
+            <NavLink to={"/suppliers"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><FaHelmetSafety /> Proveedores</NavLink>
           </div>
           <ul className="flex flex-col gap-x-[30px] gap-y-[20px] rounded-md text-black py-6 text-2xl">
             {user ? <li className="pb-2">

@@ -57,14 +57,14 @@ const Services = () => {
                 <h3 className="text-3xl">{service?.name}: {service?.code}</h3>
                 <h4 className="text-xl">Cantidad de movimientos: {service?.movements}</h4>
                 <div className="flex items-center text-2xl gap-x-4">
-                  {/*<a href={`${import.meta.env.VITE_REACT_API_URL}/api/cash-service/excel/${service?._id}` }>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/excel/service/${service?._id}` }>
                     <Button style="icon" className={"!bg-third text-white rounded-md duration-300 hover:scale-90"}>
                       <FaFileExcel/>
                     </Button>
-                  </a>*/}
-                  <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90"} onClick={() => onDeleteService(service?._id)}>
+                  </a>
+                  {!service?.movements ? <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90"} onClick={() => onDeleteService(service?._id)}>
                     <FaTrash/>
-                  </Button>
+                  </Button> : null}
                 </div>
               </div>
               })
