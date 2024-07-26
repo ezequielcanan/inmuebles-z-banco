@@ -50,20 +50,20 @@ const Account = () => {
   }, [filter, reload])
 
   const onSubmit = handleSubmit(async data => {
-    await customAxios.put(`/account/${aid}`, {...data, signatories})
+    await customAxios.put(`/account/${aid}`, { ...data, signatories })
     setEditing(false)
     setReload(!reload)
   })
 
   const deleteFirmante = (firmanteIndex) => {
-    signatories.splice(firmanteIndex,1)
+    signatories.splice(firmanteIndex, 1)
     setSignatories([...signatories])
   }
 
   const changeFirmanteProperty = (property, value, firmanteIndex) => {
     const updateObj = {}
     updateObj[property] = value
-    signatories[firmanteIndex] = {...signatories[firmanteIndex], ...updateObj}
+    signatories[firmanteIndex] = { ...signatories[firmanteIndex], ...updateObj }
     setSignatories([...signatories])
   }
 
@@ -104,10 +104,10 @@ const Account = () => {
             </Form>
             <div className={`grid grid-cols-2 gap-4 text-white grid-rows-3 w-full`}>
               {signatories?.map((sign, i) => {
-                return <SignatoryCard accountPanel firmante={sign} i={i} editing={editing} labelClassName={"!text-lg"} className={"!text-lg"} changeFirmanteProperty={changeFirmanteProperty} deleteFirmante={deleteFirmante}/>
+                return <SignatoryCard accountPanel firmante={sign} i={i} editing={editing} labelClassName={"!text-lg"} className={"!text-lg"} changeFirmanteProperty={changeFirmanteProperty} deleteFirmante={deleteFirmante} />
               })}
-              {editing ? <div className="border-dashed border-4 border-yellow-100 w-full flex items-center justify-center h-full" onClick={() => setSignatories([...signatories, {}])}>
-                <FaPlus/>
+              {editing ? <div className="border-dashed border-4 border-third/50 w-full flex items-center justify-center h-full text-third" onClick={() => setSignatories([...signatories, {}])}>
+                <FaPlus />
               </div> : null}
             </div>
           </section>
@@ -120,33 +120,39 @@ const Account = () => {
                 </Button>
               </Link>
             </div>
-            <div className="overflow-x-auto w-full flex flex-col gap-y-[30px]">
+            <div className="w-full flex flex-col gap-y-[30px]">
               <div className="flex justify-between items-center">
                 <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(!filter)}>Ordenado por: {filter ? "Vencimiento" : "Emisión"}</Button>
-                <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-5xl"><FaFileDownload/></a>
+                <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-5xl"><FaFileDownload /></a>
               </div>
-              <table className="w-full border-4 border-b-0 border-third">
-                <thead className="w-full border-b-4 border-third">
-                  <tr>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Tipo</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Número</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Credito</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Debito</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Brutos</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">6XMIL</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Borrar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {movements.map((movement, i) => {
-                    return <MovementRow movement={movement} key={i} setReload={setReload}/>
-                  })}
-                </tbody>
-              </table>
+              <div className="overflow-x-scroll">
+                <table className="max-w-full border-4 border-b-0 border-third">
+                  <thead className="border-b-4 border-third">
+                    <tr>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Fecha</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Tipo</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Número</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Cheque anterior</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Proveedor</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Servicio</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Credito</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Debito</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Brutos</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">6XMIL</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Borrar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {movements.map((movement, i) => {
+                      return <MovementRow movement={movement} key={i} setReload={setReload} />
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </section>
         </>

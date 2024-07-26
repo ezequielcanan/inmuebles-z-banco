@@ -15,10 +15,13 @@ import Fields from "../components/Fields"
 const NewMovement = () => {
   const [cashAccounts, setCashAccounts] = useState([])
   const [suppliers, setSuppliers] = useState([])
+  const [services, setServices] = useState([])
+  const [expiredChecks, setExpiredChecks] = useState([])
   const navigate = useNavigate()
   const {aid} = useParams()
   const {register, handleSubmit, setFocus} = useForm()
   const fields = [
+    {name: "date", type: "date", text: "Fecha", component: Input},
     {name: "emissionDate", type: "date", text: "Emisión", required: true, component: Input},
     {name: "expirationDate", type: "date", text: "Vencimiento", component: Input},
     {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}], component: SelectInput, common: false},
@@ -28,23 +31,31 @@ const NewMovement = () => {
     {name: "debit", text: "Débito:", type: "number", component: Input},
     {name: "paid", text: "Finalizado:", type: "checkbox", component: Input, className: "scale-[2] -translate-x-1 justify-self-end"},
     {name: "tax", text: "Ingresos brutos:", type: "number", placeholder: "%", component: Input},
+    {name: "lastCheck", text: "Cheque vencido:", options: [{text: null, value: undefined}, ...expiredChecks], component: SelectInput, common: false},
     {name: "supplier", text: "Proveedor:", options: [{text: null, value: undefined}, ...suppliers], component: SelectInput, common: false},
+    {name: "service", text: "Servicio:", options: [{text: null, value: undefined}, ...services], component: SelectInput, common: false},
     {name: "cashAccount", text: "Cuenta de ingreso:", options: [{text: null, value: undefined}, ...cashAccounts], component: SelectInput, common: false}
   ]
 
   const onSubmit = handleSubmit(async data => {
     data.account = aid
     data.expirationDate = data.expirationDate || data.emissionDate
-    if (!data.cashAccount) {
-      delete data.cashAccount
-    } else if (!data.detail) {
-      data.detail = cashAccounts.find(a => a.value == data.cashAccount)?.text
-    }
-
+    !data.cashAccount ? delete data.cashAccount : (data.detail = `${data.detail} ${cashAccounts.find(a => a.value == data.cashAccount)?.text}`)
     !data.supplier && delete data.supplier
+    !data.service && delete data.service
+    !data.lastCheck && delete data.lastCheck
+
 
     if (data.movementType != "Cheque") {
       data.paid = true
+      data.date = data.date || data.emissionDate
+      data.emissionDate = data.date
+      data.expirationDate = data.date
+    }
+
+    if (!data.detail) {
+      data.supplier && (data.detail = suppliers.find(s => s.value == data.supplier)?.text)
+      data.service && (data.detail = services.find(s => s.value == data.service)?.text)
     }
     
     await customAxios.post("/movement", data)
@@ -66,6 +77,22 @@ const NewMovement = () => {
     customAxios.get("/cash-account").then(res => {
       setCashAccounts(res?.data?.payload?.map(a => {
         return {text: a?.name, value: a?._id}
+      }) || "")
+    })
+  }, [])
+
+  useEffect(() => {
+    customAxios.get(`/movement/expired/${aid}`).then(res => {
+      setExpiredChecks(res?.data?.payload?.map(a => {
+        return {text: a?.code, value: a?._id}
+      }) || "")
+    })
+  }, [])
+
+  useEffect(() => {
+    customAxios.get("/service").then(res => {
+      setServices(res?.data?.payload?.map(a => {
+        return {text: `${a?.name}: ${a?.code}`, value: a?._id}
       }) || "")
     })
   }, [])

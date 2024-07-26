@@ -17,8 +17,8 @@ const Fields = ({fields, register, setFocus, onSubmit}) => {
       const Component = field.component
       const newProps = {}
       !field.common && (newProps.options = field.options)
-      return <Component key={"f"+i} {...newProps} className={field.className || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
-      <Label name={field?.name} text={field.text}/>
+      return <Component key={"f"+i} {...newProps} className={field.className || ""} containerClassName={field.containerClassName || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
+      <Label name={field?.name} text={field.text} className={field.labelClassName || ""}/>
     </Component>
     })
   )
