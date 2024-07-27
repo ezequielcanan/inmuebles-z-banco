@@ -147,6 +147,7 @@ const Account = () => {
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">6XMIL</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Borrar</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Nota</th>
                     </tr>
                   </thead>
                   <tbody>
