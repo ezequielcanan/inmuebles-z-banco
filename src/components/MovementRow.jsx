@@ -3,10 +3,19 @@ import customAxios from "../config/axios.config"
 import { formatNumber } from "../utils/numbers"
 import { useRef, useState } from "react"
 import { motion } from "framer-motion"
+import Input from "./FormInput/Input"
+import moment from "moment"
 
-const MovementRow = ({movement, setReload}) => {
+const MovementRow = ({movement, editing, setReload}) => {
   const [note, setNote] = useState(false)
   const noteRef = useRef()
+  const inputProps = {
+    className: "!text-base !bg-transparent !p-0",
+    containerClassName: "!border-b-0 !bg-transparent !p-0",
+    disabled: !editing 
+  }
+
+  const formatDate = date => moment.utc(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
   const deleteMovement = async () => {
     await customAxios.delete(`/movement/${movement?._id}`)
@@ -25,21 +34,30 @@ const MovementRow = ({movement, setReload}) => {
   }
 
   const toggleNote = () => setNote(prev => !prev)
+  
+  const onInputProperty = async (e, property) => {
+    const updateObj = {}
+    updateObj[property] = e.target?.value
+    await customAxios.put(`/movement/${movement?._id}`, updateObj)
+    setReload(prev => !prev)
+  }
+
   return (
     <tr className="border-b-4 border-third duration-300">
-      <td className="p-3">{movement?.date?.toLowerCase() != "fecha inválida" ? movement?.date : ""}</td>
-      <td className="p-3">{movement?.emissionDate}</td>
-      <td className="p-3">{movement?.expirationDate}</td>
+      <td className="p-3"><Input defaultValue={formatDate(movement?.date)} {...inputProps} onInput={e => onInputProperty(e, "date")} type="date"/></td>
+      <td className="p-3"><Input defaultValue={formatDate(movement?.emissionDate)} {...inputProps} onInput={e => onInputProperty(e, "emissionDate")} type="date"/></td>
+      <td className="p-3"><Input defaultValue={formatDate(movement?.expirationDate)} {...inputProps} onInput={e => onInputProperty(e, "expirationDate")} type="date"/></td>
       <td className="p-3">{movement?.movementType}</td>
-      <td className={`p-3 duration-300 ${(!movement?.paid && movement.movementType == "Cheque") ? "bg-red-600/30 hover:bg-red-600/50" : "bg-green-600/30 hover:bg-green-600/50"}`} onClick={changeMovementState}>{movement?.code}</td>
+      <td className={`p-3 duration-300 ${(!movement?.paid && movement.movementType == "Cheque") ? "bg-red-600/30 hover:bg-red-600/50" : "bg-green-600/30 hover:bg-green-600/50"} w-full`} onClick={changeMovementState}><Input defaultValue={movement?.code} {...inputProps} onInput={e => onInputProperty(e, "code")}/></td>
       <td className="p-3">{movement?.lastCheck?.code}</td>
       <td className="p-3">{movement?.supplier?.name}</td>
       <td className="p-3">{movement?.service?.name}{movement?.service ? ":" : ""} {movement?.service?.code}</td>
-      <td className="p-3">{movement?.detail}</td>
+      <td className="p-3"><Input defaultValue={movement?.detail} {...inputProps} onInput={e => onInputProperty(e, "detail")}/></td>
       <td className="p-3">{formatNumber(movement?.credit)}</td>
       <td className="p-3">{formatNumber(movement?.debit)}</td>
       <td className="p-3">{formatNumber(movement?.tax)}</td>
       <td className="p-3">{formatNumber(movement?.sixThousandths)}</td>
+      <td className="p-3">{formatNumber(movement?.realBalance)}</td>
       <td className="p-3">{formatNumber(movement?.balance)}</td>
       {movement?.canBeDeleted != false && <td className="p-3 text-red-600"><FaTrashAlt className="cursor-pointer" onClick={() => deleteMovement()}/></td>}
       <td className="p-3 text-fourth cursor-pointer" onClick={toggleNote}><FaChevronRight/></td>

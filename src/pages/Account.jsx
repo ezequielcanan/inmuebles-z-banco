@@ -145,14 +145,15 @@ const Account = () => {
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Debito</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Brutos</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">6XMIL</th>
-                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo Real</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Saldo Proyectado</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Borrar</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Nota</th>
                     </tr>
                   </thead>
                   <tbody>
                     {movements.map((movement, i) => {
-                      return <MovementRow movement={movement} key={i} setReload={setReload} />
+                      return <MovementRow movement={movement} editing={editing} key={i} setReload={setReload} />
                     })}
                   </tbody>
                 </table>
