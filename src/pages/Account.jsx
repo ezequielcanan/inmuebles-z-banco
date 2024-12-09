@@ -36,18 +36,18 @@ const Account = () => {
     }).catch(e => {
       setProjects([])
     })
-  }, [reload])
+  }, [reload, editing])
 
   useEffect(() => {
     customAxios.get(`/account/${aid}`).then(res => {
       setAccount(res?.data?.payload)
       setSignatories(res?.data?.payload?.signatories || [])
     })
-  }, [reload])
+  }, [reload, editing])
 
   useEffect(() => {
     customAxios.get(`/movement/${aid}?filter=${filter}`).then(res => setMovements(res?.data?.payload))
-  }, [filter, reload])
+  }, [filter, reload, editing])
 
   const onSubmit = handleSubmit(async data => {
     await customAxios.put(`/account/${aid}`, { ...data, signatories })

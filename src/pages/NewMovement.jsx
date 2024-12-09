@@ -16,7 +16,6 @@ const NewMovement = () => {
   const [cashAccounts, setCashAccounts] = useState([])
   const [suppliers, setSuppliers] = useState([])
   const [services, setServices] = useState([])
-  const [expiredChecks, setExpiredChecks] = useState([])
   const navigate = useNavigate()
   const {aid} = useParams()
   const {register, handleSubmit, setFocus} = useForm()
@@ -24,14 +23,14 @@ const NewMovement = () => {
     {name: "date", type: "date", text: "Fecha", component: Input},
     {name: "emissionDate", type: "date", text: "Emisión", required: true, component: Input},
     {name: "expirationDate", type: "date", text: "Vencimiento", component: Input},
-    {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}], component: SelectInput, common: false},
+    {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}, {text: "Pago Servicios", value: "Pago Servicios"}], component: SelectInput, common: false},
     {name: "code", text: "Número:", component: Input},
     {name: "detail", text: "Detalle:", component: Input},
     {name: "credit", text: "Crédito:", type: "number", component: Input},
     {name: "debit", text: "Débito:", type: "number", component: Input},
     {name: "paid", text: "Finalizado:", type: "checkbox", component: Input, className: "scale-[2] -translate-x-1 justify-self-end"},
     {name: "tax", text: "Ingresos brutos:", type: "number", placeholder: "%", component: Input},
-    {name: "lastCheck", text: "Cheque vencido:", options: [{text: null, value: undefined}, ...expiredChecks], component: SelectInput, common: false},
+    {name: "lastCheck", text: "Cheque vencido:", component: Input},
     {name: "supplier", text: "Proveedor:", options: [{text: null, value: undefined}, ...suppliers], component: SelectInput, common: false},
     {name: "service", text: "Servicio:", options: [{text: null, value: undefined}, ...services], component: SelectInput, common: false},
     {name: "cashAccount", text: "Cuenta de ingreso:", options: [{text: null, value: undefined}, ...cashAccounts], component: SelectInput, common: false}
@@ -77,14 +76,6 @@ const NewMovement = () => {
     customAxios.get("/cash-account").then(res => {
       setCashAccounts(res?.data?.payload?.map(a => {
         return {text: a?.name, value: a?._id}
-      }) || "")
-    })
-  }, [])
-
-  useEffect(() => {
-    customAxios.get(`/movement/expired/${aid}`).then(res => {
-      setExpiredChecks(res?.data?.payload?.map(a => {
-        return {text: a?.code, value: a?._id}
       }) || "")
     })
   }, [])

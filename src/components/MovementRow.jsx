@@ -10,7 +10,7 @@ const MovementRow = ({movement, editing, setReload}) => {
   const [note, setNote] = useState(false)
   const noteRef = useRef()
   const inputProps = {
-    className: "!text-base !bg-transparent !p-0",
+    className: "!text-base !p-1 !bg-fifth !p-0",
     containerClassName: "!border-b-0 !bg-transparent !p-0",
     disabled: !editing 
   }
@@ -39,7 +39,6 @@ const MovementRow = ({movement, editing, setReload}) => {
     const updateObj = {}
     updateObj[property] = e.target?.value
     await customAxios.put(`/movement/${movement?._id}`, updateObj)
-    setReload(prev => !prev)
   }
 
   return (
@@ -48,8 +47,8 @@ const MovementRow = ({movement, editing, setReload}) => {
       <td className="p-3"><Input defaultValue={formatDate(movement?.emissionDate)} {...inputProps} onInput={e => onInputProperty(e, "emissionDate")} type="date"/></td>
       <td className="p-3"><Input defaultValue={formatDate(movement?.expirationDate)} {...inputProps} onInput={e => onInputProperty(e, "expirationDate")} type="date"/></td>
       <td className="p-3">{movement?.movementType}</td>
-      <td className={`p-3 duration-300 ${(!movement?.paid && movement.movementType == "Cheque") ? "bg-red-600/30 hover:bg-red-600/50" : "bg-green-600/30 hover:bg-green-600/50"} w-full`} onClick={changeMovementState}><Input defaultValue={movement?.code} {...inputProps} onInput={e => onInputProperty(e, "code")}/></td>
-      <td className="p-3">{movement?.lastCheck?.code}</td>
+      <td className={`p-3 duration-150 ${(!movement?.paid && movement.movementType == "Cheque") ? "bg-red-600/30 hover:bg-red-600/50" : "bg-green-600/30 hover:bg-green-600/50"} w-full`} onClick={changeMovementState}><Input defaultValue={movement?.code} {...inputProps} onInput={e => onInputProperty(e, "code")}/></td>
+      <td className="p-3">{movement?.lastCheck}</td>
       <td className="p-3">{movement?.supplier?.name}</td>
       <td className="p-3">{movement?.service?.name}{movement?.service ? ":" : ""} {movement?.service?.code}</td>
       <td className="p-3"><Input defaultValue={movement?.detail} {...inputProps} onInput={e => onInputProperty(e, "detail")}/></td>

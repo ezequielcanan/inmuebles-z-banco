@@ -32,7 +32,7 @@ const Suppliers = () => {
     <Main className={"flex flex-col gap-y-[70px]"} paddings>
       <Section>
         <Title className={"text-center md:text-start"}>
-          Servicios
+          Proveedores
         </Title>
         <SelectInput options={projects} className={"text-white"} containerClassName={"bg-fourth text-white p-2 px-4"} onChange={(e) => setProject(e.target.value)}>
           <Label>Projecto del excel:</Label>
@@ -43,7 +43,7 @@ const Suppliers = () => {
           <>
             {suppliers.length ? (
               suppliers.map((supplier, i) => {
-                return <div key={"c"+i} className="bg-teal-500 shadow-[10px_10px_15px_0px_#2226] border-primary flex flex-col justify-between w-full gap-y-4 py-6 px-6 text-black duration-300">
+                return <div key={"c"+i} className="bg-teal-500 overflow-hidden shadow-[10px_10px_15px_0px_#2226] border-primary flex flex-col justify-between w-full gap-y-4 py-6 px-6 text-black duration-300">
                 <h3 className="text-3xl">{supplier?.name}: {supplier?.code}</h3>
                 <h4 className="text-xl">Cantidad de movimientos: {supplier?.movements}</h4>
                 <div className="flex items-center text-2xl gap-x-4">
