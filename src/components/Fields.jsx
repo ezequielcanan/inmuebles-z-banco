@@ -1,6 +1,6 @@
 import Label from "./Label"
 
-const Fields = ({fields, register, setFocus, onSubmit}) => {
+const Fields = ({fields, register, movementType, setFocus, onSubmit}) => {
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -12,14 +12,15 @@ const Fields = ({fields, register, setFocus, onSubmit}) => {
     }
   }
 
+  
   return (
     fields.map((field, i) => {
       const Component = field.component
       const newProps = {}
       !field.common && (newProps.options = field.options)
-      return <Component key={"f"+i} {...newProps} className={field.className || ""} containerClassName={field.containerClassName || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
+      return ((!field?.showField || (field.shows(movementType))) ? <Component key={"f"+i} {...newProps} className={field.className || ""} containerClassName={field.containerClassName || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
       <Label name={field?.name} text={field.text} className={field.labelClassName || ""}/>
-    </Component>
+    </Component> : <></>)
     })
   )
 }

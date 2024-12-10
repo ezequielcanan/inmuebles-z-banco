@@ -124,9 +124,12 @@ const Account = () => {
               </Link>
             </div>
             <div className="w-full flex flex-col gap-y-[30px]">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-wrap gap-8 justify-between items-center">
                 <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(!filter)}>Ordenado por: {filter ? "Vencimiento" : "Emisión"}</Button>
-                <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-5xl"><FaFileDownload /></a>
+                <div className="flex flex-wrap items-center gap-4">
+                <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Diario <FaFileDownload /></a>
+                </div>
               </div>
               <div className="overflow-x-scroll">
                 <table className="max-w-full border-4 border-b-0 border-third">
