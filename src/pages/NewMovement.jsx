@@ -49,9 +49,12 @@ const NewMovement = () => {
 
     if (data.movementType != "Cheque") {
       data.paid = true
+      data.state = "REALIZADO"
       data.date = data.date || data.emissionDate
       data.emissionDate = data.date
       data.expirationDate = data.date
+    } else {
+      data.state = data?.paid ? "REALIZADO" : "PENDIENTE"
     }
 
     if (!data.detail) {

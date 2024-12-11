@@ -140,6 +140,7 @@ const Account = () => {
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Tipo</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Número</th>
+                      <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Estado</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Cheque anterior</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Proveedor</th>
                       <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Servicio</th>

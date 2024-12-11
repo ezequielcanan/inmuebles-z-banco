@@ -12,6 +12,8 @@ import NewAccount from "../pages/NewAccount"
 import CashAccounts from "../pages/CashAccounts";
 import Services from "../pages/Services";
 import Suppliers from "../pages/Suppliers";
+import Agenda from "../pages/Agenda";
+import ProjectAgenda from "../pages/ProjectAgenda";
 
 const Router = () => {
   const { getUser, setUser } = useContext(UserContext);
@@ -36,6 +38,9 @@ const Router = () => {
           <Route path="/cash-accounts" element={<CashAccounts/>}/>
           <Route path="/services" element={<Services/>}/>
           <Route path="/suppliers" element={<Suppliers/>}/>
+          <Route path="/incoming-checks" element={<Agenda/>}/>
+          <Route path="/incoming-checks/:pid" element={<ProjectAgenda/>}/>
+
           </>
         )}
       </Routes>
