@@ -18,7 +18,7 @@ const Fields = ({fields, register, movementType, setFocus, onSubmit}) => {
       const Component = field.component
       const newProps = {}
       !field.common && (newProps.options = field.options)
-      return ((!field?.showField || (field.shows(movementType))) ? <Component key={"f"+i} {...newProps} className={field.className || ""} containerClassName={field.containerClassName || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
+      return ((!field?.showField || (field.shows(movementType))) ? <Component key={"f"+i} {...field?.otherProps} {...newProps} className={field.className || ""} containerClassName={field.containerClassName || ""} register={{...register(field?.name, {required: field.required || false})}} onKeyDown={(e) => handleKeyDown(e, i)} type={field.type}>
       <Label name={field?.name} text={field.text} className={field.labelClassName || ""}/>
     </Component> : <></>)
     })

@@ -15,6 +15,7 @@ import { FaPlus, FaTrash } from "react-icons/fa6"
 import SignatoryCard from "../components/SignatoryCard"
 import { AnimatePresence } from "framer-motion"
 import Fields from "../components/Fields"
+import { PiBank } from "react-icons/pi"
 
 const NewAccount = () => {
   const navigate = useNavigate()
@@ -68,7 +69,7 @@ const NewAccount = () => {
         </Title>
       </section>
       {projects.length ? <Section style="form" className={""}>
-        <MdAccountBalanceWallet className="text-[100px] md:text-[180px]" />
+        <PiBank className="text-[100px] md:text-[180px]" />
         <Form onSubmit={onSubmit} className={""}>
           <Fields fields={fields} setFocus={setFocus} register={register} onSubmit={onSubmit}/>
           <p className="text-xl md:text-4xl font-ubuntu">Firmantes:</p>
