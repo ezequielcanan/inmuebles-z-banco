@@ -16,6 +16,7 @@ const NewMovement = () => {
   const [cashAccounts, setCashAccounts] = useState([])
   const [suppliers, setSuppliers] = useState([])
   const [services, setServices] = useState([])
+  const [tax, setTax] = useState(0)
   const navigate = useNavigate()
   const {aid} = useParams()
   const {register, handleSubmit, setFocus, watch} = useForm()
@@ -53,6 +54,8 @@ const NewMovement = () => {
       data.date = data.date || data.emissionDate
       data.emissionDate = data.date
       data.expirationDate = data.date
+
+      if (data?.credit) data.tax = tax
     } else {
       data.state = data?.paid ? "REALIZADO" : "PENDIENTE"
     }
@@ -84,6 +87,14 @@ const NewMovement = () => {
       }) || "")
     })
   }, [])
+
+  useEffect(() => {
+    customAxios.get("/tax/actual").then(res => {
+      setTax(res?.data?.payload?.percentage || 0)
+    })
+  }, [])
+
+  console.log(tax)
 
   useEffect(() => {
     customAxios.get("/service").then(res => {

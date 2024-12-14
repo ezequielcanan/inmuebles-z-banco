@@ -114,6 +114,7 @@ const ChekcActions = () => {
     await customAxios.put(`/incoming-check/${cid}?property=account&action=$unset`)
     await customAxios.put(`/incoming-check/${cid}?property=state&action=$unset`)
     await customAxios.put(`/incoming-check/${cid}?property=transfer&action=$unset`)
+    await customAxios.delete(`/movement/check/${cid}`)
     setReload(!reload)
   }
 
@@ -128,7 +129,6 @@ const ChekcActions = () => {
     { name: "date", type: "date", text: "Fecha", component: Input, className: "!text-xl", labelClassName: "!text-xl" },
   ]
 
-  console.log(check)
 
   return (
     <Main className={"flex flex-col gap-y-[50px] pb-[120px]"} paddings>

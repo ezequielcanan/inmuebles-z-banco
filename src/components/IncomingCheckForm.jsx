@@ -53,6 +53,7 @@ const IncomingCheckForm = ({ onSubmit, setFocus, register, check, text = "Agrega
   ]
 
   if (check) fields.splice(5,3)
+  if (!check) fields.splice(11,2)
 
   return (
     <Section style="form" className={""}>

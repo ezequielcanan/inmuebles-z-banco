@@ -13,7 +13,7 @@ const MovementRow = ({ movement, editing, setReload }) => {
   const inputProps = {
     className: "!text-base !p-1 !bg-fifth !p-0",
     containerClassName: "!border-b-0 !bg-transparent !p-0",
-    disabled: !editing
+    disabled: movement?.incomingCheck || !editing
   }
 
   const formatDate = date => moment.utc(date, "DD-MM-YYYY").format("YYYY-MM-DD")
@@ -60,13 +60,14 @@ const MovementRow = ({ movement, editing, setReload }) => {
         {
           movement?.movementType == "Cheque" ?
             <SelectInput
+              id={movement?._id}
               defaultValue={(movement?.paid) ? "REALIZADO" : (movement?.error ? "ERROR" : "PENDIENTE")}
               options={[{ text: "REALIZADO", value: "REALIZADO" }, { text: "PENDIENTE", value: "PENDIENTE" }, { text: "ERROR", value: "ERROR" }]}
               onChange={e => onChangeState(e)}
               className="!text-base !p-1 !bg-fifth !p-0 w-full !h-full text-center !bg-transparent"
               containerClassName="!border-b-0 !bg-transparent !p-0 !h-[57px]"
               optionClassName={"text-white text-lg"}
-              disabled={!editing}
+              disabled={movement?.incomingCheck || !editing}
             /> :
             "REALIZADO"
         }

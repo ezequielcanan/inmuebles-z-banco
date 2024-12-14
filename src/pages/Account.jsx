@@ -157,7 +157,7 @@ const Account = () => {
                   </thead>
                   <tbody>
                     {movements.map((movement, i) => {
-                      return <MovementRow movement={movement} editing={editing} key={i} setReload={setReload} />
+                      return <MovementRow movement={movement} editing={editing} key={movement?._id} setReload={setReload} />
                     })}
                   </tbody>
                 </table>
