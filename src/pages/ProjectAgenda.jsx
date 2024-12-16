@@ -88,7 +88,7 @@ const ProjectAgenda = () => {
                         <td className="p-3">{check?.state || "En cartera"}</td>
                         <td className="p-3">{check?.checkType}</td>
                         <td className="p-3">{check?.transferDetail}</td>
-                        <td className="p-3">{moment.utc(check.operationDate).format(dateFormat)}</td>
+                        <td className="p-3">{check?.operationDate && moment.utc(check.operationDate).format(dateFormat)}</td>
                         <td className="p-3"><Link to={`/incoming-checks/actions/${check?._id}`}><FaArrowRight size={20}/></Link></td>
                       </tr>
                     )

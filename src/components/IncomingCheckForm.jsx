@@ -47,7 +47,7 @@ const IncomingCheckForm = ({ onSubmit, setFocus, register, check, text = "Agrega
     {name: "detail", text: "Concepto", component: Input, otherProps: {defaultValue: check?.detail}},
     {name: "amount", type: "number", text: "Importe", component: Input, otherProps: {defaultValue: check?.amount}},
     {name: "checkType", text: "Tipo:", options: [{text: "ECHEQ", value: "ECHEQ"}, {text: "FISICO", value: "FISICO"}], component: SelectInput, common: false, otherProps: {defaultValue: check?.checkType}},
-    {name: "operationDate", type: "date", text: "Operacion", component: Input, otherProps: {defaultValue: moment.utc(check?.operationDate).format("YYYY-MM-DD")}},
+    {name: "operationDate", type: "date", text: "Operacion", component: Input, otherProps: {defaultValue: check?.operationDate ? moment.utc(check?.operationDate).format("YYYY-MM-DD") : undefined}},
     {name: "transferDetail", text: "Detalle Operacion", component: Input, otherProps: {defaultValue: check?.transferDetail}},
   
   ]

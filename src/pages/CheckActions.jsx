@@ -15,6 +15,7 @@ import Input from "../components/FormInput/Input"
 import Fields from "../components/Fields"
 import Form from "../components/Form"
 import { FaPlusCircle, FaTrash } from "react-icons/fa"
+import Swal from "sweetalert2"
 
 const ChekcActions = () => {
   const [check, setCheck] = useState(null)
@@ -29,10 +30,10 @@ const ChekcActions = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    customAxios.get("/account").then(res => {
+    customAxios.get(`/account${check ? "?project=" + check?.project?._id : ""}`).then(res => {
       setAccounts(res?.data?.payload || [])
     })
-  }, [])
+  }, [check])
 
   useEffect(() => {
     customAxios.get(`/incoming-check/${cid}`).then(res => {
@@ -66,11 +67,18 @@ const ChekcActions = () => {
   }, [])
 
   const onClickAccountCard = async (account) => {
-    const monthTax = await customAxios.get(`/tax/date?date=${check?.operationDate}`)
-    await customAxios.put(`/incoming-check/${cid}?property=account&value=${account?._id}`)
-    await customAxios.put(`/incoming-check/${cid}?property=state&value=ACEPTADO`)
-    await customAxios.post("/movement", { incomingCheck: cid, account: account?._id, tax: monthTax?.data?.payload?.tax || 0 })
-    setReload(!reload)
+    if (!check?.operationDate) {
+      Swal.fire({
+        title: "No esta especificada la fecha de operacion",
+        icon: "error"
+      })
+    } else {
+      const monthTax = await customAxios.get(`/tax/date?date=${check?.operationDate}`)
+      await customAxios.put(`/incoming-check/${cid}?property=account&value=${account?._id}`)
+      await customAxios.put(`/incoming-check/${cid}?property=state&value=ACEPTADO`)
+      await customAxios.post("/movement", { incomingCheck: cid, account: account?._id, tax: monthTax?.data?.payload?.tax || 0 })
+      setReload(!reload)
+    }
   }
 
   const changeState = async (newState) => {
@@ -144,7 +152,7 @@ const ChekcActions = () => {
         <>
           <Section className={"flex !flex-col gap-y-[20px] items-center md:items-start flex-wrap"}>
             <Title className={"text-center xl:text-start"}>Cheque {check?.project?.title}: {check?.code}</Title>
-            <FaTrash className="text-red-600 hover:text-red-800 duration-300 text-3xl" onClick={deleteIncomingCheck}/>
+            <FaTrash className="text-red-600 hover:text-red-800 duration-300 text-3xl" onClick={deleteIncomingCheck} />
             <p className="text-3xl">Recibido: {moment.utc(check?.receivedDate).format("DD-MM-YYYY")} - {check?.owner ? check?.owner?.name : (check?.cashAccount ? check?.cashAccount?.name : check?.specialFrom)}</p>
           </Section>
           <section className="grid md:grid-cols-2 gap-8">
