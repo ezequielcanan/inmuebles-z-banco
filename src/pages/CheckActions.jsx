@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import customAxios from "../config/axios.config"
 import Section from "../containers/Section"
 import Title from "../components/Title"
@@ -26,6 +26,7 @@ const ChekcActions = () => {
   const { register: transferRegister, handleSubmit: handleTransferSubmit, setFocus: setTransferFocus } = useForm()
   const { register: newTransferRegister, handleSubmit: handleNewTransferSubmit, setFocus: setNewTransferFocus, reset: resetNewTransfer } = useForm()
   const { cid } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     customAxios.get("/account").then(res => {
@@ -65,9 +66,10 @@ const ChekcActions = () => {
   }, [])
 
   const onClickAccountCard = async (account) => {
+    const monthTax = await customAxios.get(`/tax/date?date=${check?.operationDate}`)
     await customAxios.put(`/incoming-check/${cid}?property=account&value=${account?._id}`)
     await customAxios.put(`/incoming-check/${cid}?property=state&value=ACEPTADO`)
-    await customAxios.post("/movement", { incomingCheck: cid, account: account?._id })
+    await customAxios.post("/movement", { incomingCheck: cid, account: account?._id, tax: monthTax?.data?.payload?.tax || 0 })
     setReload(!reload)
   }
 
@@ -118,6 +120,12 @@ const ChekcActions = () => {
     setReload(!reload)
   }
 
+  const deleteIncomingCheck = async () => {
+    await customAxios.delete(`/incoming-check/${cid}`)
+    await customAxios.delete(`/movement/check/${cid}`)
+    navigate(`/incoming-checks/${check?.project?._id}`)
+  }
+
   const transferFields = [
     { name: "supplier", text: "Proveedor", component: SelectInput, common: false, options: [{ text: null, value: undefined }, ...suppliers], className: "max-w-[200px]", },
     { name: "cashAccount", text: "Sociedad", component: SelectInput, common: false, options: [{ text: null, value: undefined }, ...cashAccounts], className: "max-w-[200px]" },
@@ -136,6 +144,7 @@ const ChekcActions = () => {
         <>
           <Section className={"flex !flex-col gap-y-[20px] items-center md:items-start flex-wrap"}>
             <Title className={"text-center xl:text-start"}>Cheque {check?.project?.title}: {check?.code}</Title>
+            <FaTrash className="text-red-600 hover:text-red-800 duration-300 text-3xl" onClick={deleteIncomingCheck}/>
             <p className="text-3xl">Recibido: {moment.utc(check?.receivedDate).format("DD-MM-YYYY")} - {check?.owner ? check?.owner?.name : (check?.cashAccount ? check?.cashAccount?.name : check?.specialFrom)}</p>
           </Section>
           <section className="grid md:grid-cols-2 gap-8">

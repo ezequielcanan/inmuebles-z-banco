@@ -34,7 +34,6 @@ const ProjectAgenda = () => {
     })  
   }, [])
 
-  console.log(checks)
 
   const dateFormat = "DD-MM-YYYY"
 
@@ -45,7 +44,7 @@ const ProjectAgenda = () => {
           <Title className={"text-center xl:text-start"}>Cheques recibidos - {project?.title}</Title>
           <Link to={"new"}><Button>Nuevo Cheque</Button></Link>
         </Section>
-        <a href={`${import.meta.env.VITE_REACT_API_URL}/api/incoming-check/excel/${pid}`} download><Button className={"self-center md:self-start"}>Archivo <FaFileExcel/></Button></a>
+        <a href={`${import.meta.env.VITE_REACT_API_URL}/api/incoming-check/excel/${pid}`} download className="self-center md:self-start"><Button className={"self-center md:self-start"}>Archivo <FaFileExcel/></Button></a>
         <section className="flex flex-col items-start gap-y-[30px] pt-[60px]">
           <div className="w-full flex flex-col gap-y-[30px]">
             {/*<div className="flex flex-wrap gap-8 justify-between items-center">

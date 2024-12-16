@@ -53,7 +53,7 @@ const MovementRow = ({ movement, editing, setReload }) => {
       <td className="p-3"><Input defaultValue={formatDate(movement?.date)} {...inputProps} onInput={e => onInputProperty(e, "date")} type="date" /></td>
       <td className="p-3"><Input defaultValue={formatDate(movement?.emissionDate)} {...inputProps} onInput={e => onInputProperty(e, "emissionDate")} type="date" /></td>
       <td className="p-3"><Input defaultValue={formatDate(movement?.expirationDate)} {...inputProps} onInput={e => onInputProperty(e, "expirationDate")} type="date" /></td>
-      <td className="p-3">{movement?.movementType}</td>
+      <td className="p-3">{movement?.movementType}{movement?.movementType == "Cheque" ? " " + movement?.checkType : ""}</td>
       <td className="p-3"><Input defaultValue={movement?.code} {...inputProps} onInput={e => onInputProperty(e, "code")} /></td>
       <td
         className={`${movement?.movementType == "Cheque" && ((movement?.paid) ? "bg-green-600/30 hover:bg-green-600/50" : (movement?.error ? "bg-red-600/30 hover:bg-red-600/50" : "bg-yellow-600/30 hover:bg-yellow-600/50"))} text-center`}>

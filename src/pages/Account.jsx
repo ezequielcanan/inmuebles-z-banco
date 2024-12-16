@@ -7,7 +7,7 @@ import Section from "../containers/Section"
 import customAxios from "../config/axios.config"
 import Subtitle from "../components/Subtitle"
 import Button from "../components/Button"
-import { FaEdit, FaFileDownload, FaPlus } from "react-icons/fa"
+import { FaChevronLeft, FaChevronRight, FaEdit, FaFileDownload, FaPlus } from "react-icons/fa"
 import MovementRow from "../components/MovementRow"
 import Input from "../components/FormInput/Input"
 import Label from "../components/Label"
@@ -20,11 +20,14 @@ const Account = () => {
   const { aid } = useParams()
   const [account, setAccount] = useState(false)
   const [movements, setMovements] = useState([])
+  const [paginatedMovements, setPaginatedMovements] = useState([])
   const [filter, setFilter] = useState(false)
   const [projects, setProjects] = useState(false)
   const [editing, setEditing] = useState(false)
   const [reload, setReload] = useState(false)
   const [signatories, setSignatories] = useState([])
+  const [page, setPage] = useState(1)
+  const movementsLimit = 2
 
   const { register, handleSubmit } = useForm()
 
@@ -46,8 +49,8 @@ const Account = () => {
   }, [reload, editing])
 
   useEffect(() => {
-    customAxios.get(`/movement/${aid}?filter=${filter}`).then(res => setMovements(res?.data?.payload))
-  }, [filter, reload, editing])
+    customAxios.get(`/movement/${aid}?filter=${filter}&page=${page-1}`).then(res => setPaginatedMovements(res?.data?.payload))
+  }, [filter, reload, editing, page])
 
   const onSubmit = handleSubmit(async data => {
     await customAxios.put(`/account/${aid}`, { ...data, signatories })
@@ -65,6 +68,10 @@ const Account = () => {
     updateObj[property] = value
     signatories[firmanteIndex] = { ...signatories[firmanteIndex], ...updateObj }
     setSignatories([...signatories])
+  }
+
+  const onChangePage = (qty = 1) => {
+    setPage(p => p+qty)
   }
 
   return (
@@ -127,7 +134,7 @@ const Account = () => {
               <div className="flex flex-wrap gap-8 justify-between items-center">
                 <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(!filter)}>Ordenado por: {filter ? "Vencimiento" : "Emisión"}</Button>
                 <div className="flex flex-wrap items-center gap-4">
-                <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
                   <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Diario <FaFileDownload /></a>
                 </div>
               </div>
@@ -156,11 +163,15 @@ const Account = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {movements.map((movement, i) => {
+                    {paginatedMovements.map((movement, i) => {
                       return <MovementRow movement={movement} editing={editing} key={movement?._id} setReload={setReload} />
                     })}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex items-center gap-4 justify-center">
+                {paginatedMovements?.length < 30 ? null : <FaChevronLeft className="text-2xl cusor-pointer" onClick={() => onChangePage()}/>}
+                {page != 1 && <FaChevronRight className="text-2xl cusor-pointer" onClick={() => onChangePage(-1)}/>}
               </div>
             </div>
           </section>

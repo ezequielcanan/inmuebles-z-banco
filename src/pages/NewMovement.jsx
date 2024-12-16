@@ -11,6 +11,7 @@ import customAxios from "../config/axios.config"
 import { useEffect, useState } from "react"
 import SelectInput from "../components/FormInput/SelectInput"
 import Fields from "../components/Fields"
+import moment from "moment"
 
 const NewMovement = () => {
   const [cashAccounts, setCashAccounts] = useState([])
@@ -47,19 +48,22 @@ const NewMovement = () => {
     !data.service && delete data.service
     !data.lastCheck && delete data.lastCheck
 
-
+    
     if (data.movementType != "Cheque") {
       data.paid = true
       data.state = "REALIZADO"
       data.date = data.date || data.emissionDate
       data.emissionDate = data.date
       data.expirationDate = data.date
-
-      if (data?.credit) data.tax = tax
     } else {
       data.state = data?.paid ? "REALIZADO" : "PENDIENTE"
     }
 
+    if (data?.credit) {
+      const monthTax = await customAxios.get(`/tax/date?date=${moment(data?.date, "YYYY-MM-DD")}`)
+      data.tax = data?.tax || monthTax?.data?.payload?.tax
+    }
+    
     if (!data.detail) {
       data.supplier && (data.detail = suppliers.find(s => s.value == data.supplier)?.text)
       data.service && (data.detail = services.find(s => s.value == data.service)?.text)

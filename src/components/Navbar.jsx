@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom"
 import { MdAccountBalanceWallet, MdAttachMoney, MdBakeryDining, MdConstruction, MdMoney, MdNotifications, MdOutlineMenu } from "react-icons/md"
 import { FaHelmetSafety } from "react-icons/fa6"
-import { FaCertificate, FaChevronDown, FaMoneyCheckAlt, FaPercentage, FaTicketAlt, FaUser, FaUserAlt } from "react-icons/fa"
+import { FaBox, FaCashRegister, FaCertificate, FaChevronDown, FaMoneyBill, FaMoneyCheckAlt, FaPercentage, FaTicketAlt, FaUser, FaUserAlt } from "react-icons/fa"
 import { HiOutlineDocument } from "react-icons/hi"
 import { LuLogOut } from "react-icons/lu"
 import { GiMoneyStack } from "react-icons/gi"
@@ -66,6 +66,9 @@ const Navbar = ({ user, setUser }) => {
             <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
               <NavLink to={"/tax"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><FaPercentage /> IIBB</NavLink>
             </li>
+            <li className={`${"block w-full h-full md:w-auto"} xl:block w-full text-xl`}>
+              <NavLink to={"/cash"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-black" : "bg-inherit text-secondary"}`} onClick={() => setNav(false)}><FaMoneyBill /> Caja</NavLink>
+            </li>
           </ul>
         </div>
         {user ? <div className="xl:self-start">
@@ -92,6 +95,9 @@ const Navbar = ({ user, setUser }) => {
           </div>
           <div className={`xl:block w-full text-xl`}>
             <NavLink to={"/tax"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><FaPercentage /> IIBB</NavLink>
+          </div>
+          <div className={`xl:block w-full text-xl`}>
+            <NavLink to={"/cash"} className={({ isActive }) => `duration-500 py-3 px-3 flex w-full gap-x-[20px] items-center ${isActive ? "bg-secondary text-textColor" : "text-secondary bg-inherit"}`} onClick={() => setNav(false)}><FaMoneyBill /> Caja</NavLink>
           </div>
           <ul className="flex flex-col gap-x-[30px] gap-y-[20px] rounded-md text-black py-6 text-2xl">
             {user ? <li className="pb-2">
