@@ -9,10 +9,10 @@ import SelectInput from "../components/FormInput/SelectInput"
 import Label from "../components/Label"
 import Button from "../components/Button"
 
-const Suppliers = () => {
+const Suppliers = ({project}) => {
   const [suppliers, setSuppliers] = useState(false)
   const [projects, setProjects] = useState([])
-  const [project, setProject] = useState(false)
+  //const [project, setProject] = useState(false)
 
   useEffect(() => {
     customAxios.get("/supplier").then(res => {
@@ -20,23 +20,23 @@ const Suppliers = () => {
     })
   }, [])
 
-  useEffect(() => {
+  /*useEffect(() => {
     customAxios.get("/projects?filter=false").then(res => {
       const data = res?.data?.payload?.map(p => {return {value: p._id, text: p?.title}})
       setProject(data[0]?.value)
       setProjects(data || [])
     })
   }, [])
-  console.log(project)
+  console.log(project)*/
   return (
     <Main className={"flex flex-col gap-y-[70px]"} paddings>
       <Section>
         <Title className={"text-center md:text-start"}>
           Proveedores
         </Title>
-        <SelectInput options={projects} className={"text-white"} containerClassName={"bg-fourth text-white p-2 px-4"} onChange={(e) => setProject(e.target.value)}>
+        {/*<SelectInput options={projects} className={"text-white"} containerClassName={"bg-fourth text-white p-2 px-4"} onChange={(e) => setProject(e.target.value)}>
           <Label>Projecto del excel:</Label>
-        </SelectInput>
+        </SelectInput>*/}
       </Section>
       <section className="grid lg:grid-cols-4 sm:grid-cols-2 gap-6">
         {suppliers ? (

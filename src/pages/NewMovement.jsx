@@ -13,11 +13,10 @@ import SelectInput from "../components/FormInput/SelectInput"
 import Fields from "../components/Fields"
 import moment from "moment"
 
-const NewMovement = () => {
+const NewMovement = ({project}) => {
   const [cashAccounts, setCashAccounts] = useState([])
   const [suppliers, setSuppliers] = useState([])
   const [services, setServices] = useState([])
-  const [tax, setTax] = useState(0)
   const navigate = useNavigate()
   const {aid} = useParams()
   const {register, handleSubmit, setFocus, watch} = useForm()
@@ -60,7 +59,7 @@ const NewMovement = () => {
     }
 
     if (data?.credit) {
-      const monthTax = await customAxios.get(`/tax/date?date=${moment(data?.date, "YYYY-MM-DD")}`)
+      const monthTax = await customAxios.get(`/tax/date?date=${moment(data?.date, "YYYY-MM-DD")}&project=${project}`)
       data.tax = data?.tax || monthTax?.data?.payload?.tax
     }
     
@@ -92,13 +91,6 @@ const NewMovement = () => {
     })
   }, [])
 
-  useEffect(() => {
-    customAxios.get("/tax/actual").then(res => {
-      setTax(res?.data?.payload?.percentage || 0)
-    })
-  }, [])
-
-  console.log(tax)
 
   useEffect(() => {
     customAxios.get("/service").then(res => {

@@ -9,11 +9,11 @@ import { FaPlus } from "react-icons/fa"
 import Section from "../containers/Section"
 import AccountCard from "../components/AccountCard"
 
-const Accounts = () => {
+const Accounts = ({project}) => {
   const [accounts, setAccounts] = useState(false)
 
   useEffect(() => {
-    customAxios.get("/account").then(res => {
+    customAxios.get(`/account?project=${project}`).then(res => {
       setAccounts(res?.data?.payload || [])
     })
   }, [])

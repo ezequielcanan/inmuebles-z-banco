@@ -21,13 +21,15 @@ const Account = () => {
   const [account, setAccount] = useState(false)
   const [movements, setMovements] = useState([])
   const [paginatedMovements, setPaginatedMovements] = useState([])
-  const [filter, setFilter] = useState(false)
+  const [filter, setFilter] = useState(0)
   const [projects, setProjects] = useState(false)
   const [editing, setEditing] = useState(false)
   const [reload, setReload] = useState(false)
   const [signatories, setSignatories] = useState([])
   const [page, setPage] = useState(1)
   const movementsLimit = 2
+
+  const filters = ["Fecha", "Emision", "Vencimiento", "date", "emissionDate", "expirationDate"]
 
   const { register, handleSubmit } = useForm()
 
@@ -49,7 +51,7 @@ const Account = () => {
   }, [reload, editing])
 
   useEffect(() => {
-    customAxios.get(`/movement/${aid}?filter=${filter}&page=${page-1}`).then(res => setPaginatedMovements(res?.data?.payload))
+    customAxios.get(`/movement/${aid}?filter=${filters[filter + 3]}&page=${page-1}`).then(res => setPaginatedMovements(res?.data?.payload))
   }, [filter, reload, editing, page])
 
   const onSubmit = handleSubmit(async data => {
@@ -121,7 +123,7 @@ const Account = () => {
               </div> : null}
             </div>
           </section>
-          <section className="flex flex-col items-start gap-y-[30px] pt-[60px]">
+          <section className="flex flex-col items-start gap-y-[30px] pt-[20px]">
             <div className="flex w-full gap-8 items-center flex-col sm:flex-row justify-between">
               <Subtitle>Movimientos</Subtitle>
               <Link to={`/accounts/${aid}/new-movement`}>
@@ -132,10 +134,10 @@ const Account = () => {
             </div>
             <div className="w-full flex flex-col gap-y-[30px]">
               <div className="flex flex-wrap gap-8 justify-between items-center">
-                <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(!filter)}>Ordenado por: {filter ? "Vencimiento" : "Emisión"}</Button>
+                <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(filter == 2 ? 0 : filter+1)}>Ordenado por: {filters[filter]}</Button>
                 <div className="flex flex-wrap items-center gap-4">
-                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
-                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filter}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Diario <FaFileDownload /></a>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filters[filter + 3]}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
+                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filters[filter + 3]}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Diario <FaFileDownload /></a>
                 </div>
               </div>
               <div className="overflow-x-scroll">

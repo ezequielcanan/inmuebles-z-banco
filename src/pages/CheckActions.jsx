@@ -73,7 +73,7 @@ const ChekcActions = () => {
         icon: "error"
       })
     } else {
-      const monthTax = await customAxios.get(`/tax/date?date=${check?.operationDate}`)
+      const monthTax = await customAxios.get(`/tax/date?date=${check?.operationDate}&project=${check?.project?._id}`)
       await customAxios.put(`/incoming-check/${cid}?property=account&value=${account?._id}`)
       await customAxios.put(`/incoming-check/${cid}?property=state&value=ACEPTADO`)
       await customAxios.post("/movement", { incomingCheck: cid, account: account?._id, tax: monthTax?.data?.payload?.tax || 0 })

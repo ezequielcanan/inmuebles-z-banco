@@ -1,6 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Home from "../pages/Home";
 import Navbar from "../components/Navbar";
 import Login from "../pages/Login";
@@ -20,13 +20,17 @@ import Tax from "../pages/Tax";
 import ProjectsCash from "../pages/ProjectsCash";
 import Cash from "../pages/Cash";
 import NewCashMovement from "../pages/NewCashMovement";
+import Projects from "../pages/Projects";
+import CookiesJs from "js-cookie"
+import OutGoingChecks from "../pages/OutGoingChecks";
 
 const Router = () => {
   const { getUser, setUser } = useContext(UserContext);
+  const [project, setProject] = useState(CookiesJs.get("banksProject") || null)
 
   return (
     <HashRouter>
-      <Navbar user={getUser()} setUser={setUser} />
+      <Navbar user={getUser()} setUser={setUser} project={project} setProject={setProject} />
       <Routes>
         <Route path="/" element={<Home user={getUser()} />} />
         {!getUser() ? (
@@ -37,21 +41,27 @@ const Router = () => {
           </>
         ) : (
           <>
-          <Route path="/accounts" element={<Accounts/>}/>
+          <Route path="/projects" element={<Projects setProject={setProject}/>}/>
+          {project ? <>
+          <Route path="/accounts" element={<Accounts project={project}/>}/>
           <Route path="/accounts/new" element={<NewAccount/>}/>
           <Route path="/accounts/:aid" element={<Account/>}/>
-          <Route path="/accounts/:aid/new-movement" element={<NewMovement/>}/>
+          <Route path="/accounts/:aid/new-movement" element={<NewMovement project={project}/>}/>
           <Route path="/cash-accounts" element={<CashAccounts/>}/>
           <Route path="/services" element={<Services/>}/>
-          <Route path="/suppliers" element={<Suppliers/>}/>
-          <Route path="/tax" element={<Tax/>}/>
+          <Route path="/suppliers" element={<Suppliers project={project}/>}/>
+          <Route path="/tax" element={<Tax project={project}/>}/>
           <Route path="/incoming-checks" element={<Agenda/>}/>
           <Route path="/incoming-checks/:pid" element={<ProjectAgenda/>}/>
           <Route path="/incoming-checks/:pid/new" element={<NewIncomingCheck/>}/>
           <Route path="/incoming-checks/actions/:cid" element={<ChekcActions/>}/>
+          <Route path="/outgoing-checks/:pid" element={<OutGoingChecks/>}/>
           <Route path="/cash" element={<ProjectsCash/>}/>
           <Route path="/cash/:pid" element={<Cash/>}/>
           <Route path="/cash/:pid/new" element={<NewCashMovement/>}/>
+          </> : (
+            <Route path="*" element={<Navigate to={"/projects"} />} />
+          )}
 
           </>
         )}

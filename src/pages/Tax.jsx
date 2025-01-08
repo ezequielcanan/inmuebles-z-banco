@@ -16,7 +16,7 @@ import moment from "moment"
 import "moment/locale/es"
 moment.locale("es")
 
-const Tax = () => {
+const Tax = ({project}) => {
   const [taxes, setTaxes] = useState(false)
   const [reload, setReload] = useState(false)
   const {register, handleSubmit, setFocus, reset} = useForm()
@@ -27,13 +27,13 @@ const Tax = () => {
 
 
   useEffect(() => {
-    customAxios.get("/tax").then(res => {
+    customAxios.get(`/tax?project=${project}`).then(res => {
       setTaxes(res?.data?.payload || [])
     })
   }, [reload])
 
   const onSubmit = handleSubmit(async data => {
-    await customAxios.post("/tax", data)
+    await customAxios.post("/tax", {...data, project})
     reset()
     setReload(!reload)
   })
