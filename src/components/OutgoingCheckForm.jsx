@@ -24,21 +24,22 @@ const OutgoingCheckForm = ({ onSubmit, setFocus, project, register, check, text 
   }, [])
 
   useEffect(() => {
-    customAxios.get(`/account?project=${project}`).then(res => {
+    project ? customAxios.get(`/account?project=${project}`).then(res => {
       setAccounts(res?.data?.payload?.map(a => {
         return {text: a?.bank, value: a?._id}
       }) || [])
-    })
+    }) : setAccounts([])
   }, [])
 
 
   const fields = [
     {name: "code", text: "N°", component: Input, otherProps: {defaultValue: check?.code}},
+    {name: "date", type: "date", text: "Fecha", component: Input, otherProps: {defaultValue: moment.utc(check?.date).format("YYYY-MM-DD")}},
     {name: "emissionDate", type: "date", text: "Emisión", component: Input, otherProps: {defaultValue: moment.utc(check?.emissionDate).format("YYYY-MM-DD")}},
-    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input, otherProps: {defaultValue: moment.utc(check?.date).format("YYYY-MM-DD")}},
-    {name: "supplier", text: "Proveedor", component: SelectInput, common: false, options: [{text: null, value: undefined}, ...suppliers], className: "max-w-[200px]",},
+    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input, otherProps: {defaultValue: moment.utc(check?.expirationDate).format("YYYY-MM-DD")}},
+    {name: "supplier", text: "Proveedor", component: SelectInput, common: false, options: [{text: null, value: undefined}, ...suppliers], className: "max-w-[200px]", otherProps: {disabled: check}},
     {name: "detail", text: "Concepto", component: Input, otherProps: {defaultValue: check?.detail}},
-    {name: "amount", type: "number", text: "Importe", component: Input, otherProps: {defaultValue: check?.amount}},
+    {name: "amount", type: "number", text: "Importe", component: Input, otherProps: {defaultValue: check?.debit}},
     {name: "checkType", text: "Tipo:", options: [{text: "ECHEQ", value: "ECHEQ"}, {text: "FISICO", value: "FISICO"}], component: SelectInput, common: false, otherProps: {defaultValue: check?.checkType}},  
     {name: "lastCheck", text: "Cheque vencido", component: Input},
   ]
@@ -46,6 +47,8 @@ const OutgoingCheckForm = ({ onSubmit, setFocus, project, register, check, text 
   if (accounts?.length) {
     fields.unshift({name: "account", text: "Banco", component: SelectInput, common: false, options: [...accounts], className: "max-w-[200px]", otherProps: {defaultValue: accounts[0]?._id}})
   }
+  
+  if (!check) fields.splice(2,1)
 
   return (
     <Section style="form" className={""}>

@@ -24,6 +24,7 @@ import Projects from "../pages/Projects";
 import CookiesJs from "js-cookie"
 import OutGoingChecks from "../pages/OutGoingChecks";
 import NewOutgoingCheck from "../pages/NewOutgoingCheck";
+import OutgoingChekcActions from "../pages/OutgoingCheckActions";
 
 const Router = () => {
   const { getUser, setUser } = useContext(UserContext);
@@ -58,6 +59,7 @@ const Router = () => {
           <Route path="/incoming-checks/actions/:cid" element={<ChekcActions/>}/>
           <Route path="/outgoing-checks/:pid" element={<OutGoingChecks/>}/>
           <Route path="/outgoing-checks/:pid/new" element={<NewOutgoingCheck/>}/>
+          <Route path="/outgoing-checks/actions/:cid" element={<OutgoingChekcActions/>}/>
           <Route path="/cash" element={<ProjectsCash/>}/>
           <Route path="/cash/:pid" element={<Cash/>}/>
           <Route path="/cash/:pid/new" element={<NewCashMovement/>}/>

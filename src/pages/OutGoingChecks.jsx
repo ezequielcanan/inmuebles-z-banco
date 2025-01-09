@@ -43,8 +43,8 @@ const OutGoingChecks = () => {
         <Section className={"flex gap-x-[40px] items-center flex-wrap"}>
           <Title className={"text-center xl:text-start"}>Cheques emitidos - {project?.title}</Title>
           <Link to={"new"}><Button>Nuevo Cheque</Button></Link>
-        </Section>
-        <a href={`${import.meta.env.VITE_REACT_API_URL}/api/incoming-check/excel/${pid}`} download className="self-center md:self-start"><Button className={"self-center md:self-start"}>Archivo <FaFileExcel/></Button></a>
+        </Section>        
+        <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${pid}`} download className="self-center md:self-start"><Button className={"self-center md:self-start"}>Archivo <FaFileExcel/></Button></a>
         <section className="flex flex-col items-start gap-y-[30px] pt-[60px]">
           <div className="w-full flex flex-col gap-y-[30px]">
             {/*<div className="flex flex-wrap gap-8 justify-between items-center">
@@ -84,9 +84,9 @@ const OutGoingChecks = () => {
                         <td className="p-3">{check?.supplier ? check?.supplier?.name : ""}</td>
                         <td className="p-3">{check?.detail}</td>
                         <td className="p-3">{check?.debit}</td>
-                        <td className="p-3">{check?.state || "En cartera"}</td>
+                        <td className="p-3">{check?.state}</td>
                         <td className="p-3">{check?.checkType}</td>
-                        <td className="p-3"><Link to={`/incoming-checks/actions/${check?._id}`}><FaArrowRight size={20}/></Link></td>
+                        <td className="p-3"><Link to={`/outgoing-checks/actions/${check?._id}`}><FaArrowRight size={20}/></Link></td>
                       </tr>
                     )
                   })}

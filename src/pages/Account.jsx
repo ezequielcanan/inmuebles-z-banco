@@ -136,7 +136,6 @@ const Account = () => {
               <div className="flex flex-wrap gap-8 justify-between items-center">
                 <Button className="self-start bg-teal-400 hover:after:!left-[-100%] !text-black border-2 border-black" onClick={() => setFilter(filter == 2 ? 0 : filter+1)}>Ordenado por: {filters[filter]}</Button>
                 <div className="flex flex-wrap items-center gap-4">
-                  <a href={`${import.meta.env.VITE_REACT_API_URL}/api/movement/checks/excel/${account?.society?._id}?filter=${filters[filter + 3]}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Cheques <FaFileDownload /></a>
                   <a href={`${import.meta.env.VITE_REACT_API_URL}/api/account/excel/${aid}?filter=${filters[filter + 3]}`} className="text-success text-3xl flex gap-2 items-center bg-primary p-2 text-white rounded-lg">Diario <FaFileDownload /></a>
                 </div>
               </div>
