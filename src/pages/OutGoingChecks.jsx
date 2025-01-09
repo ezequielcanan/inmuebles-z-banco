@@ -26,7 +26,7 @@ const OutGoingChecks = () => {
   }, [])
 
   useEffect(() => {
-    customAxios.get(`/incoming-check/project/${pid}`).then(res => {
+    customAxios.get(`/movement/checks/out/${pid}`).then(res => {
       setChecks(res?.data?.payload || [])
     }).catch(e => {
       console.log(e)
@@ -58,37 +58,34 @@ const OutGoingChecks = () => {
               <table className="max-w-full w-full border-4 border-b-0 border-third">
                 <thead className="border-b-4 border-third">
                   <tr>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Recibido</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Banco</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Fecha</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Pago</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">N°</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Recibido por</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Proveedor</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Librador</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Importe</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Estado</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Tipo</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle Operacion</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Fecha Operacion</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {checks.map((check, i) => {
+                    console.log(check?.checkType)
                     return (
                       <tr className="border-b-4 border-third duration-300">
-                        <td className="p-3">{moment.utc(check.receivedDate).format(dateFormat)}</td>
-                        <td className="p-3">{moment.utc(check.emissionDate).format(dateFormat)}</td>
+                        <td className="p-3">{check?.account?.bank}</td>
                         <td className="p-3">{moment.utc(check.date).format(dateFormat)}</td>
+                        <td className="p-3">{moment.utc(check.emissionDate).format(dateFormat)}</td>
+                        <td className="p-3">{moment.utc(check.expirationDate).format(dateFormat)}</td>
                         <td className="p-3">{check.code}</td>
-                        <td className="p-3">{check?.owner ? check?.owner?.name : (check?.cashAccount ? check?.cashAccount?.name : check?.specialFrom)}</td>
+                        <td className="p-3">{check?.supplier ? check?.supplier?.name : ""}</td>
                         <td className="p-3">{check?.detail}</td>
-                        <td className="p-3">{check?.origin}</td>
-                        <td className="p-3">{check?.amount}</td>
+                        <td className="p-3">{check?.debit}</td>
                         <td className="p-3">{check?.state || "En cartera"}</td>
                         <td className="p-3">{check?.checkType}</td>
-                        <td className="p-3">{check?.transferDetail}</td>
-                        <td className="p-3">{check?.operationDate && moment.utc(check.operationDate).format(dateFormat)}</td>
                         <td className="p-3"><Link to={`/incoming-checks/actions/${check?._id}`}><FaArrowRight size={20}/></Link></td>
                       </tr>
                     )
