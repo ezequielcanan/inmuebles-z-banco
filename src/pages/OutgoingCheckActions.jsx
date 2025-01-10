@@ -70,10 +70,11 @@ const OutgoingChekcActions = () => {
 
   const deleteOutgoingCheck = async () => {
     await customAxios.delete(`/movement/${cid}`)
-    navigate(`/outgoing-checks/${check?.project?._id}`)
+    navigate(`/outgoing-checks/${check?.account?.society?._id}`)
   }
 
-
+  const isExpired = moment(check?.expirationDate).add(33, "days")?.isBefore(moment()) && check?.state == "PENDIENTE"
+  
   return (
     <Main className={"flex flex-col gap-y-[50px] pb-[120px]"} paddings>
       {(check) ? (
@@ -83,12 +84,12 @@ const OutgoingChekcActions = () => {
             <FaTrash className="text-red-600 hover:text-red-800 duration-300 text-3xl" onClick={deleteOutgoingCheck} />
           </Section>
           <section className="grid md:grid-cols-2 gap-8">
-            <OutgoingCheckForm text="Editar" register={register} onSubmit={onSubmit} project={check?.project} setFocus={setFocus} check={check} />
+            <OutgoingCheckForm text="Editar" register={register} onSubmit={onSubmit} project={check?.account?.society?._id} setFocus={setFocus} check={check} />
             <div className="flex flex-col gap-8">
               <>
                 <div className="flex items-center gap-2">
                   <p className="text-3xl">ESTADO:</p>
-                  <Button className={check?.state == "RECHAZADO" ? "bg-red-500 after:!bg-red-600" : ""} onClick={() => changeState(check?.state == "PENDIENTE" ? "COBRADO" : check?.state == "COBRADO" ? "RECHAZADO" : "PENDIENTE")}>{check?.state}</Button>
+                  <Button className={(check?.state == "RECHAZADO" || isExpired) ? "bg-red-500 after:!bg-red-600" : ""} onClick={() => changeState(check?.state == "PENDIENTE" ? "COBRADO" : check?.state == "COBRADO" ? "RECHAZADO" : "PENDIENTE")}>{check?.state == "PENDIENTE" && isExpired ? "VENCIDO" : check?.state}</Button>
                 </div>
               </>
             </div>

@@ -63,7 +63,7 @@ const OutGoingChecks = () => {
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Emisión</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Vencimiento</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">N°</th>
-                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Proveedor</th>
+                    <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">A la orden</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Detalle</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Importe</th>
                     <th className="text-start p-3 whitespace-nowrap bg-third text-2xl text-white">Estado</th>
@@ -73,18 +73,19 @@ const OutGoingChecks = () => {
                 </thead>
                 <tbody>
                   {checks.map((check, i) => {
-                    console.log(check?.checkType)
+                    const isExpired = moment(check?.expirationDate, "DD-MM-YYYY").add(33, "days")?.isBefore(moment()) && check?.state == "PENDIENTE"
+
                     return (
-                      <tr className="border-b-4 border-third duration-300">
+                      <tr className={`border-b-4 border-third duration-300 ${isExpired || check?.error ? "bg-red-300" : !check?.paid ? "bg-yellow-300" : "bg-green-300"}`}>
                         <td className="p-3">{check?.account?.bank}</td>
-                        <td className="p-3">{moment.utc(check.date).format(dateFormat)}</td>
-                        <td className="p-3">{moment.utc(check.emissionDate).format(dateFormat)}</td>
-                        <td className="p-3">{moment.utc(check.expirationDate).format(dateFormat)}</td>
+                        <td className="p-3">{check?.date || ""}</td>
+                        <td className="p-3">{check?.emissionDate || ""}</td>
+                        <td className="p-3">{check?.expirationDate || ""}</td>
                         <td className="p-3">{check.code}</td>
-                        <td className="p-3">{check?.supplier ? check?.supplier?.name : ""}</td>
+                        <td className="p-3">{check?.supplier?.name || check?.cashAccount?.name || ""}</td>
                         <td className="p-3">{check?.detail}</td>
                         <td className="p-3">{check?.debit}</td>
-                        <td className="p-3">{check?.state}</td>
+                        <td className="p-3">{check?.state == "PENDIENTE" && isExpired ? "VENCIDO" : check?.state}</td>
                         <td className="p-3">{check?.checkType}</td>
                         <td className="p-3"><Link to={`/outgoing-checks/actions/${check?._id}`}><FaArrowRight size={20}/></Link></td>
                       </tr>

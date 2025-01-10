@@ -116,7 +116,7 @@ const Account = () => {
             </Form>
             <div className={`grid grid-cols-2 gap-4 text-white grid-rows-3 w-full`}>
               {signatories?.map((sign, i) => {
-                return <SignatoryCard accountPanel firmante={sign} i={i} editing={editing} labelClassName={"!text-lg"} className={"!text-lg"} changeFirmanteProperty={changeFirmanteProperty} deleteFirmante={deleteFirmante} />
+                return <SignatoryCard accountPanel key={sign?._id} firmante={sign} i={i} editing={editing} labelClassName={"!text-lg"} className={"!text-lg"} changeFirmanteProperty={changeFirmanteProperty} deleteFirmante={deleteFirmante} />
               })}
               {editing ? <div className="border-dashed border-4 border-third/50 w-full flex items-center justify-center h-full text-third" onClick={() => setSignatories([...signatories, {}])}>
                 <FaPlus />
