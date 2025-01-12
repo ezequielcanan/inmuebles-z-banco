@@ -93,7 +93,7 @@ const NewMovement = ({project}) => {
 
 
   useEffect(() => {
-    customAxios.get("/service").then(res => {
+    customAxios.get(`/service/project/${project}`).then(res => {
       setServices(res?.data?.payload?.map(a => {
         return {text: `${a?.name}: ${a?.code}`, value: a?._id}
       }) || "")

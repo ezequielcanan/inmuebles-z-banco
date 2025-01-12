@@ -56,20 +56,9 @@ const MovementRow = ({ movement, editing, setReload }) => {
       <td className="p-3">{movement?.movementType}{movement?.movementType == "Cheque" ? " " + movement?.checkType : ""}</td>
       <td className="p-3"><Input defaultValue={movement?.code} {...inputProps} onInput={e => onInputProperty(e, "code")} /></td>
       <td
-        className={`${movement?.movementType == "Cheque" && ((movement?.paid) ? "bg-green-600/30 hover:bg-green-600/50" : (movement?.error ? "bg-red-600/30 hover:bg-red-600/50" : "bg-yellow-600/30 hover:bg-yellow-600/50"))} text-center`}>
+        className={`${(movement?.paid) ? "bg-green-600/30 hover:bg-green-600/50" : (movement?.error ? "bg-red-600/30 hover:bg-red-600/50" : "bg-yellow-600/30 hover:bg-yellow-600/50")} text-center`}>
         {
-          movement?.movementType == "Cheque" ?
-            <SelectInput
-              id={movement?._id}
-              defaultValue={(movement?.paid) ? "REALIZADO" : (movement?.error ? "ERROR" : "PENDIENTE")}
-              options={[{ text: "REALIZADO", value: "REALIZADO" }, { text: "PENDIENTE", value: "PENDIENTE" }, { text: "ERROR", value: "ERROR" }]}
-              onChange={e => onChangeState(e)}
-              className="!text-base !p-1 !bg-fifth !p-0 w-full !h-full text-center !bg-transparent"
-              containerClassName="!border-b-0 !bg-transparent !p-0 !h-[57px]"
-              optionClassName={"text-white text-lg"}
-              disabled={movement?.incomingCheck || !editing}
-            /> :
-            "REALIZADO"
+          (movement?.paid) ? "REALIZADO" : (movement?.error ? "ERROR" : "PENDIENTE")
         }
       </td>
       <td className="p-3">{movement?.lastCheck}</td>

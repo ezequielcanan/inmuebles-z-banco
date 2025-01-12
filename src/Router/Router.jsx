@@ -52,7 +52,7 @@ const Router = () => {
           <Route path="/accounts/:aid/new-movement" element={<NewMovement project={project}/>}/>
           <Route path="/cash-accounts" element={<CashAccounts/>}/>
           <Route path="/services" element={<Services project={project}/>}/>
-          <Route path="/services/:sid" element={<Service />}/>
+          <Route path="/services/:sid" element={<Service project={project}/>}/>
           <Route path="/suppliers" element={<Suppliers project={project}/>}/>
           <Route path="/tax" element={<Tax project={project}/>}/>
           <Route path="/incoming-checks" element={<Agenda/>}/>
