@@ -22,6 +22,7 @@ const Services = ({project}) => {
     {name: "name", text: "Servicio:", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input},
     {name: "code", text: "N° de cuenta:", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input},
     {name: "description", text: "Detalle:", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input},
+    {name: "plan", text: "Plan", labelClassName: "!text-lg", className: "!text-lg !w-auto justify-self-end", type: "checkbox", containerClassName: "max-w-full", component: Input},
   ]
 
 

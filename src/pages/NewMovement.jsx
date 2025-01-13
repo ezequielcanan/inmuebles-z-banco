@@ -25,7 +25,7 @@ const NewMovement = ({project}) => {
     {name: "date", type: "date", text: "Fecha", component: Input},
     {name: "emissionDate", type: "date", text: "Emisión", required: true, component: Input},
     {name: "expirationDate", type: "date", text: "Vencimiento", component: Input},
-    {name: "movementType", text: "Tipo:", options: [{text: "Cheque", value: "Cheque"}, {text: "Transferencia", value: "Transferencia"}, {text: "Pago Servicios", value: "Pago Servicios"}, {text: "Gastos Bancarios", value: "Gastos Bancarios"}], component: SelectInput, common: false},
+    {name: "movementType", text: "Tipo:", options: [{text: "Transferencia", value: "Transferencia"}, {text: "VEP", value: "VEP"}, {text: "Gastos Bancarios", value: "Gastos Bancarios"}], component: SelectInput, common: false},
     {name: "checkType", text: "Cheque:", options: [{text: "ECHEQ", value: "ECHEQ"}, {text: "FISICO", value: "FISICO"}], component: SelectInput, common: false, showField: "movementType", shows: (field) => field == "Cheque"},
     {name: "code", text: "Número:", component: Input},
     {name: "detail", text: "Detalle:", component: Input},

@@ -31,8 +31,6 @@ const NewOutgoingCheck = () => {
   }, [])
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data)
-
     data.project = pid
     data.expirationDate = data.expirationDate || data.emissionDate
     !data.supplier && delete data.supplier
@@ -54,7 +52,6 @@ const NewOutgoingCheck = () => {
       data.state = data?.paid ? "REALIZADO" : "PENDIENTE"
     }*/
     
-    console.log(data)
 
     await customAxios.post("/movement", data)
     navigate(`/outgoing-checks/${pid}`)
