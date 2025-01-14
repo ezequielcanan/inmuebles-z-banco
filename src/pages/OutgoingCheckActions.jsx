@@ -57,7 +57,6 @@ const OutgoingChekcActions = () => {
   }
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data)
     !data.lastCheck && delete data.lastCheck
     data.debit = data?.amount || 0
 

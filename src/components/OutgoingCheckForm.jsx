@@ -51,6 +51,7 @@ const OutgoingCheckForm = ({ onSubmit, setFocus, project, register, check, text 
     {name: "amount", type: "number", text: "Importe", component: Input, otherProps: {defaultValue: check?.debit}},
     {name: "checkType", text: "Tipo:", options: [{text: "ECHEQ", value: "ECHEQ"}, {text: "FISICO", value: "FISICO"}], component: SelectInput, common: false, otherProps: {defaultValue: check?.checkType}},  
     {name: "lastCheck", text: "Cheque vencido", component: Input},
+    {name: "note", text: "Nota", component: Input, otherProps: {defaultValue: check?.note}},
   ]
 
   if (accounts?.length) {

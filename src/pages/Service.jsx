@@ -114,6 +114,7 @@ const Service = ({ project }) => {
       data.emissionDate = data?.date
       data.expirationDate = data?.date
       data.debit = data.second || 0
+      data.notShows = true
 
       await customAxios.post("/movement", data)
     }
@@ -123,8 +124,11 @@ const Service = ({ project }) => {
     setReload(!reload)
   })
 
-  const changeState = async (mid, newState) => {
+  const changeState = async (mid, newState, secondMovement) => {
     await customAxios.put(`/movement/${mid}`, { state: newState, paid: newState == "REALIZADO", error: newState == "CANCELADO" })
+    if (secondMovement) {
+      await customAxios.put(`/movement/${secondMovement}`, { notShows: newState != "CANCELADO" })
+    }
     setReload(!reload)
   }
 
@@ -145,7 +149,7 @@ const Service = ({ project }) => {
   }
 
   return (
-    <Main className={"flex flex-col gap-y-[70px]"} paddings>
+    <Main className={"flex flex-col gap-y-[70px] pb-[30px]"} paddings>
       {service ? (
         <>
           <Section>
@@ -172,9 +176,10 @@ const Service = ({ project }) => {
                   <h3 className="text-3xl">BANCO {movement?.account?.bank}{movements?.length == i+1 && service?.plan ? " SUSCRIPCION" : ""}</h3>
                   <Input defaultValue={moment.utc(movement?.date).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(movement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <Input defaultValue={movement?.debit} onChange={(e) => onChangeProperty(movement?._id, "debit", e?.target?.value)} type="number" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
+                  <Input defaultValue={movement?.note} onChange={(e) => onChangeProperty(movement?._id, "note", e?.target?.value)} type="text" placeholder={"Nota"} labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <div className="flex items-center gap-2">
                     <p className="text-lg">ESTADO:</p>
-                    <Button className={`${!movement?.paid ? (movement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(movement?._id, movement?.state == "PENDIENTE" ? "REALIZADO" : (movement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE")}>{movement?.state}</Button>
+                    <Button className={`${!movement?.paid ? (movement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(movement?._id, movement?.state == "PENDIENTE" ? "REALIZADO" : (movement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE", (service?.plan && movements?.length != i+1) ? secondMovement?._id : false)}>{movement?.state}</Button>
                     {service?.plan && movements?.length != i+1 && !movement?.paid && movement?.error ? null : <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => (onDeleteMovement(secondMovement?._id), onDeleteMovement(movement?._id))}>
                       <FaTrash />
                     </Button>}

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 import SelectInput from "../components/FormInput/SelectInput"
 import Fields from "../components/Fields"
 import moment from "moment"
+import { TbDeviceAirtag } from "react-icons/tb"
 
 const NewMovement = ({project}) => {
   const [cashAccounts, setCashAccounts] = useState([])
@@ -22,26 +23,21 @@ const NewMovement = ({project}) => {
   const {register, handleSubmit, setFocus, watch} = useForm()
   const movementType = watch("movementType")
   const fields = [
-    {name: "date", type: "date", text: "Fecha", component: Input},
-    {name: "emissionDate", type: "date", text: "Emisión", required: true, component: Input},
-    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input},
+    {name: "date", type: "date", text: "Fecha", required: true, component: Input},
     {name: "movementType", text: "Tipo:", options: [{text: "Transferencia", value: "Transferencia"}, {text: "VEP", value: "VEP"}, {text: "Gastos Bancarios", value: "Gastos Bancarios"}], component: SelectInput, common: false},
-    {name: "checkType", text: "Cheque:", options: [{text: "ECHEQ", value: "ECHEQ"}, {text: "FISICO", value: "FISICO"}], component: SelectInput, common: false, showField: "movementType", shows: (field) => field == "Cheque"},
     {name: "code", text: "Número:", component: Input},
     {name: "detail", text: "Detalle:", component: Input},
     {name: "credit", text: "Crédito:", type: "number", component: Input},
     {name: "debit", text: "Débito:", type: "number", component: Input},
-    {name: "paid", text: "Finalizado:", type: "checkbox", component: Input, className: "scale-[2] -translate-x-1 justify-self-end"},
     {name: "tax", text: "Ingresos brutos:", type: "number", placeholder: "%", component: Input},
-    {name: "lastCheck", text: "Cheque vencido:", component: Input},
     {name: "supplier", text: "Proveedor:", options: [{text: null, value: undefined}, ...suppliers], component: SelectInput, common: false},
-    {name: "service", text: "Servicio:", options: [{text: null, value: undefined}, ...services], component: SelectInput, common: false},
     {name: "cashAccount", text: "Cuenta de ingreso:", options: [{text: null, value: undefined}, ...cashAccounts], component: SelectInput, common: false}
   ]
 
   const onSubmit = handleSubmit(async data => {
     data.account = aid
-    data.expirationDate = data.expirationDate || data.emissionDate
+    data.emissionDate = data.date
+    data.expirationDate = data.date
     !data.cashAccount ? delete data.cashAccount : (data.detail = `${data.detail} ${cashAccounts.find(a => a.value == data.cashAccount)?.text}`)
     !data.supplier && delete data.supplier
     !data.service && delete data.service
@@ -51,9 +47,6 @@ const NewMovement = ({project}) => {
     if (data.movementType != "Cheque") {
       data.paid = true
       data.state = "REALIZADO"
-      data.date = data.date || data.emissionDate
-      data.emissionDate = data.date
-      data.expirationDate = data.date
     } else {
       data.state = data?.paid ? "REALIZADO" : "PENDIENTE"
     }
