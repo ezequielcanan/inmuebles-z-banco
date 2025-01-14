@@ -65,9 +65,24 @@ const Service = ({ project }) => {
 
   useEffect(() => {
     customAxios.get(`/movement/service/movements/${sid}`).then(res => {
-      setMovements(res?.data?.payload?.reverse() || [])
+      let response = res?.data?.payload?.reverse() || []
+      if (service?.plan) {
+        const movementsToOrder = [...response]
+        const suscription = movementsToOrder.pop()
+        response = movementsToOrder.reduce((result, value, index) => {
+          if (index % 2 === 0) {
+            result.push([value])
+          } else {
+            result[result.length - 1].push(value)
+            result[result.length - 1] = result[result.length - 1].reverse()
+          }
+          return result
+        }, [])
+        suscription && response.push(suscription)
+      }
+      setMovements(response)
     })
-  }, [reload])
+  }, [reload, service])
 
   const onSubmit = handleSubmit(async data => {
     if (!movements?.length || !service?.plan) {
@@ -146,18 +161,37 @@ const Service = ({ project }) => {
               </Form>
             </div>
             {movements?.length ? (
-              movements?.map(movement => {
+              movements?.map((m, i) => {
+                let movement = m
+                let secondMovement = m
+                if (m?.length) {
+                  movement = m[0]
+                  secondMovement = m[1]
+                }
                 return <div key={movement?._id} className="bg-teal-500 shadow-[10px_10px_15px_0px_#2226] border-primary flex flex-col w-full gap-y-4 py-6 px-6 text-black duration-300">
-                  <h3 className="text-3xl">BANCO {movement?.account?.bank}</h3>
+                  <h3 className="text-3xl">BANCO {movement?.account?.bank}{movements?.length == i+1 && service?.plan ? " SUSCRIPCION" : ""}</h3>
                   <Input defaultValue={moment.utc(movement?.date).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(movement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <Input defaultValue={movement?.debit} onChange={(e) => onChangeProperty(movement?._id, "debit", e?.target?.value)} type="number" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <div className="flex items-center gap-2">
                     <p className="text-lg">ESTADO:</p>
                     <Button className={`${!movement?.paid ? (movement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(movement?._id, movement?.state == "PENDIENTE" ? "REALIZADO" : (movement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE")}>{movement?.state}</Button>
-                    <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => onDeleteMovement(movement?._id)}>
+                    {service?.plan && movements?.length != i+1 && !movement?.paid && movement?.error ? null : <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => (onDeleteMovement(secondMovement?._id), onDeleteMovement(movement?._id))}>
                       <FaTrash />
-                    </Button>
+                    </Button>}
                   </div>
+                  {(service?.plan && movements?.length != i+1 && !movement?.paid && movement?.error) ? (
+                    <>
+                      <Input defaultValue={moment.utc(secondMovement?.date).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(secondMovement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full mt-8" />
+                      <Input defaultValue={secondMovement?.debit} onChange={(e) => onChangeProperty(secondMovement?._id, "debit", e?.target?.value)} type="number" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
+                      <div className="flex items-center gap-2">
+                        <p className="text-lg">ESTADO:</p>
+                        <Button className={`${!secondMovement?.paid ? (secondMovement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(secondMovement?._id, secondMovement?.state == "PENDIENTE" ? "REALIZADO" : (secondMovement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE")}>{secondMovement?.state}</Button>
+                        <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => (onDeleteMovement(secondMovement?._id), onDeleteMovement(movement?._id))}>
+                          <FaTrash />
+                        </Button>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               })
             ) : null}
