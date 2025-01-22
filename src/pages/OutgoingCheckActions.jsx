@@ -59,8 +59,7 @@ const OutgoingChekcActions = () => {
   const onSubmit = handleSubmit(async data => {
     !data.lastCheck && delete data.lastCheck
     data.debit = data?.amount || 0
-
-
+    data.notShows = !data.expirationDate
 
     await customAxios.put("/movement/" + cid, data)
     setReload(!reload)

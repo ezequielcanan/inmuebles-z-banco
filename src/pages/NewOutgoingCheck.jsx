@@ -32,7 +32,9 @@ const NewOutgoingCheck = () => {
 
   const onSubmit = handleSubmit(async data => {
     data.project = pid
-    data.expirationDate = data.expirationDate || data.emissionDate
+    if (!data.expirationDate) {
+      data.notShows = true
+    }
     !data.supplier && delete data.supplier
     !data.cashAccount && delete data.cashAccount
     !data.lastCheck && delete data.lastCheck

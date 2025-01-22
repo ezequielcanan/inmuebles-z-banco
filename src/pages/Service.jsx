@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form"
 import Form from "../components/Form"
 import moment from "moment"
 import SelectInput from "../components/FormInput/SelectInput"
+import Label from "../components/Label"
 
 
 const Service = ({ project }) => {
@@ -28,12 +29,12 @@ const Service = ({ project }) => {
   const { register, handleSubmit, setFocus, reset } = useForm()
 
   const notPlanFields = [
-    { name: "date", text: "Fecha", type: "date", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input, otherProps: { required: true } },
+    { name: "expirationDate", text: "Vencimiento", type: "date", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input, otherProps: { required: true } },
     { name: "debit", text: "Monto", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", type: "number", component: Input },
   ]
 
   const vepFields = [
-    { name: "date", text: "Fecha VEP", type: "date", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input, otherProps: { required: true } },
+    { name: "expirationDate", text: "Fecha VEP", type: "date", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input, otherProps: { required: true } },
     { name: "code", text: "N° VEP", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", component: Input, otherProps: { required: true } },
     { name: "debit", text: "Monto", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", type: "number", component: Input },
   ]
@@ -44,7 +45,7 @@ const Service = ({ project }) => {
     { name: "second", text: "2do Vencimiento", labelClassName: "!text-lg", className: "!text-lg !w-full", containerClassName: "max-w-full", type: "number", component: Input },
   ]
 
-  const fields = service?.plan ? (!movements?.length ? vepFields : planFields) : notPlanFields
+  const fields = service?.plan ? ((!movements?.length && service?.firstVep) ? vepFields : planFields) : notPlanFields
 
 
   if (accounts?.length) fields.unshift({ name: "account", text: "Banco", component: SelectInput, common: false, options: [...accounts], labelClassName: "!text-lg", className: "!text-lg !w-full max-w-[200px]", containerClassName: "max-w-full", otherProps: { defaultValue: accounts[0]?._id } })
@@ -66,10 +67,10 @@ const Service = ({ project }) => {
   useEffect(() => {
     customAxios.get(`/movement/service/movements/${sid}`).then(res => {
       let response = res?.data?.payload?.reverse() || []
-      if (service?.plan) {
-        const movementsToOrder = [...response]
-        const suscription = movementsToOrder.pop()
-        response = movementsToOrder.reduce((result, value, index) => {
+      if (service?.plan && response?.length) {
+        const movementsToOrder = response?.length ? [...response] : []
+        const suscription = service?.firstVep ? movementsToOrder.pop() : false
+        response = movementsToOrder?.length ? movementsToOrder?.reduce((result, value, index) => {
           if (index % 2 === 0) {
             result.push([value])
           } else {
@@ -77,29 +78,24 @@ const Service = ({ project }) => {
             result[result.length - 1] = result[result.length - 1].reverse()
           }
           return result
-        }, [])
-        suscription && response.push(suscription)
+        }, []) : []
+        if (suscription && service?.firstVep) response.push(suscription)
       }
       setMovements(response)
     })
   }, [reload, service])
 
   const onSubmit = handleSubmit(async data => {
-    if (!movements?.length || !service?.plan) {
-      data.emissionDate = data?.date
-      data.expirationDate = data?.date
+    if ((!movements?.length && service?.plan && service?.firstVep) || !service?.plan ) {
       data.movementType = (!service?.plan) ? "Pago Servicios" : "VEP"
       data.paid = false
       data.error = false
       data.state = "PENDIENTE"
       data.detail = `${service?.plan ? "SUSCRIPCION " : ""}${service?.name}: ${service?.code}`
       data.service = sid
-
       await customAxios.post("/movement", data)
     } else {
-      data.date = data.month + "-16"
-      data.emissionDate = data?.date
-      data.expirationDate = data?.date
+      data.expirationDate = data.month + "-16"
       data.movementType = "Pago Servicios"
       data.paid = false
       data.error = false
@@ -110,9 +106,7 @@ const Service = ({ project }) => {
 
       await customAxios.post("/movement", data)
 
-      data.date = data.month + "-26"
-      data.emissionDate = data?.date
-      data.expirationDate = data?.date
+      data.expirationDate = data.month + "-26"
       data.debit = data.second || 0
       data.notShows = true
 
@@ -137,7 +131,6 @@ const Service = ({ project }) => {
 
     if (property == "date") {
       updateObj["emissionDate"] = value
-      updateObj["expirationDate"] = value
     }
 
     await customAxios.put(`/movement/${mid}`, updateObj)
@@ -166,27 +159,39 @@ const Service = ({ project }) => {
             </div>
             {movements?.length ? (
               movements?.map((m, i) => {
-                let movement = m
-                let secondMovement = m
+                let movement
+                let secondMovement
                 if (m?.length) {
                   movement = m[0]
                   secondMovement = m[1]
+                } else {
+                  movement = m
                 }
                 return <div key={movement?._id} className="bg-teal-500 shadow-[10px_10px_15px_0px_#2226] border-primary flex flex-col w-full gap-y-4 py-6 px-6 text-black duration-300">
-                  <h3 className="text-3xl">BANCO {movement?.account?.bank}{movements?.length == i+1 && service?.plan ? " SUSCRIPCION" : ""}</h3>
-                  <Input defaultValue={moment.utc(movement?.date).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(movement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
+                  <h3 className="text-3xl">BANCO {movement?.account?.bank}{(movements?.length == i + 1 && service?.plan && service?.firstVep) ? " SUSCRIPCION" : ""}</h3>
+                  <Input defaultValue={moment.utc(movement?.expirationDate).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(movement?._id, "expirationDate", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full">
+                    <Label text={"Vencimiento"} className="!text-lg"/>
+                  </Input>
+                  <Input defaultValue={movement?.date ? moment.utc(movement?.date).format("YYYY-MM-DD") : ""} onChange={(e) => onChangeProperty(movement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full">
+                    <Label text={"Fecha"} className="!text-lg"/>
+                  </Input>
                   <Input defaultValue={movement?.debit} onChange={(e) => onChangeProperty(movement?._id, "debit", e?.target?.value)} type="number" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <Input defaultValue={movement?.note} onChange={(e) => onChangeProperty(movement?._id, "note", e?.target?.value)} type="text" placeholder={"Nota"} labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                   <div className="flex items-center gap-2">
                     <p className="text-lg">ESTADO:</p>
-                    <Button className={`${!movement?.paid ? (movement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(movement?._id, movement?.state == "PENDIENTE" ? "REALIZADO" : (movement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE", (service?.plan && movements?.length != i+1) ? secondMovement?._id : false)}>{movement?.state}</Button>
-                    {service?.plan && movements?.length != i+1 && !movement?.paid && movement?.error ? null : <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => (onDeleteMovement(secondMovement?._id), onDeleteMovement(movement?._id))}>
+                    <Button className={`${!movement?.paid ? (movement?.error ? "bg-red-500 after:!bg-red-600" : "bg-yellow-700 after:bg-yellow-600") : ""} text-lg`} onClick={() => changeState(movement?._id, movement?.state == "PENDIENTE" ? "REALIZADO" : (movement?.state == "REALIZADO") ? "CANCELADO" : "PENDIENTE", (service?.plan && movements?.length != i + 1) ? secondMovement?._id : false)}>{movement?.state}</Button>
+                    {service?.plan && movements?.length != i + 1 && !movement?.paid && movement?.error ? null : <Button style="icon" className={"!bg-red-600 text-white rounded-md duration-300 hover:scale-90 h-full ml-auto"} onClick={() => (onDeleteMovement(secondMovement?._id), onDeleteMovement(movement?._id))}>
                       <FaTrash />
                     </Button>}
                   </div>
-                  {(service?.plan && movements?.length != i+1 && !movement?.paid && movement?.error) ? (
+                  {(service?.plan && ((movements?.length != i + 1 && service?.firstVep) || !service?.firstVep) && !movement?.paid && movement?.error) ? (
                     <>
-                      <Input defaultValue={moment.utc(secondMovement?.date).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(secondMovement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full mt-8" />
+                     <Input defaultValue={moment.utc(secondMovement?.expirationDate).format("YYYY-MM-DD")} onChange={(e) => onChangeProperty(secondMovement?._id, "expirationDate", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full">
+                    <Label text={"Vencimiento"} className="!text-lg"/>
+                  </Input>
+                  <Input defaultValue={secondMovement?.date ? moment.utc(secondMovement?.date).format("YYYY-MM-DD") : ""} onChange={(e) => onChangeProperty(secondMovement?._id, "date", e?.target?.value)} type="date" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full">
+                    <Label text={"Fecha"} className="!text-lg"/>
+                  </Input>
                       <Input defaultValue={secondMovement?.debit} onChange={(e) => onChangeProperty(secondMovement?._id, "debit", e?.target?.value)} type="number" labelClassName="!text-lg" className="!text-lg !w-full" containerClassName="max-w-full" />
                       <div className="flex items-center gap-2">
                         <p className="text-lg">ESTADO:</p>

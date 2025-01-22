@@ -43,8 +43,8 @@ const OutgoingCheckForm = ({ onSubmit, setFocus, project, register, check, text 
 
   const fields = [
     {name: "code", text: "N°", component: Input, otherProps: {defaultValue: check?.code}},
-    {name: "emissionDate", type: "date", text: "Emisión", component: Input, otherProps: {defaultValue: moment.utc(check?.emissionDate).format("YYYY-MM-DD")}},
-    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input, otherProps: {defaultValue: moment.utc(check?.expirationDate).format("YYYY-MM-DD")}},
+    {name: "emissionDate", type: "date", text: "Emisión", component: Input, otherProps: {defaultValue: check?.emissionDate ? moment.utc(check?.emissionDate).format("YYYY-MM-DD") : undefined}},
+    {name: "expirationDate", type: "date", text: "Vencimiento", component: Input, otherProps: {defaultValue: check?.expirationDate ? moment.utc(check?.expirationDate).format("YYYY-MM-DD") : undefined}},
     {name: "supplier", text: "Proveedor", component: SelectInput, common: false, options: [{text: null, value: undefined}, ...suppliers], className: "max-w-[200px]", otherProps: {disabled: check, value: check?.supplier?._id}},
     {name: "cashAccount", text: "Cuenta de ingreso", options: [{text: null, value: undefined}, ...cashAccounts], component: SelectInput, common: false, otherProps: {disabled: check, value: check?.cashAccount?._id}},
     {name: "detail", text: "Concepto", component: Input, otherProps: {defaultValue: check?.detail}},
@@ -55,7 +55,7 @@ const OutgoingCheckForm = ({ onSubmit, setFocus, project, register, check, text 
   ]
 
   if (accounts?.length) {
-    fields.unshift({name: "account", text: "Banco", component: SelectInput, common: false, options: [...accounts], className: "max-w-[200px]", otherProps: {defaultValue: accounts[0]?._id}})
+    fields.unshift({name: "account", text: "Banco", component: SelectInput, common: false, options: [...accounts], className: "max-w-[200px]", otherProps: {defaultValue: check ? check?.account?._id : accounts[0]?._id}})
   }
   
   if (check) {
