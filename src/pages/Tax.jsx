@@ -33,7 +33,9 @@ const Tax = ({project}) => {
   }, [reload])
 
   const onSubmit = handleSubmit(async data => {
-    await customAxios.post("/tax", {...data, project})
+    const result = await customAxios.post("/tax", {...data, project})
+    console.log(result?.data?.payload)
+    await customAxios.put("/movement/tax", result?.data?.payload)
     reset()
     setReload(!reload)
   })

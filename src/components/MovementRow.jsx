@@ -65,8 +65,8 @@ const MovementRow = ({ movement, editing, setReload }) => {
       <td className="p-3">{movement?.supplier?.name}</td>
       <td className="p-3">{movement?.service?.name}{movement?.service ? ":" : ""} {movement?.service?.code}</td>
       <td className="p-3"><Input defaultValue={movement?.detail} {...inputProps} onInput={e => onInputProperty(e, "detail")} /></td>
-      <td className="p-3">{formatNumber(movement?.credit)}</td>
-      <td className="p-3">{formatNumber(movement?.debit)}</td>
+      <td className="p-3"><Input defaultValue={movement?.credit} type="number" {...inputProps} onInput={e => onInputProperty(e, "credit")} /></td>
+      <td className="p-3"><Input defaultValue={movement?.debit} type="number" {...inputProps} onInput={e => onInputProperty(e, "debit")} /></td>
       <td className="p-3">{formatNumber(movement?.tax)}</td>
       <td className="p-3">{formatNumber(movement?.sixThousandths)}</td>
       <td className="p-3">{formatNumber(movement?.realBalance)}</td>
